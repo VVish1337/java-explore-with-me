@@ -8,10 +8,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>main-ewm</artifactId>
+    <artifactId>stats-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>Main Service</name>
+    <name>Statistic Service</name>
 
     <dependencies>
         <dependency>
