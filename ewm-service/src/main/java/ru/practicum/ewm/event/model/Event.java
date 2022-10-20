@@ -24,8 +24,8 @@ public class Event {
     @JoinColumn(name = "category_id")
     private Category category;
     private Long confirmedRequests;
-    private String createdOn;
-    private String description;
+    private LocalDateTime createdOn;
+    private LocalDateTime description;
     private String eventDate;
     @ManyToOne
     @JoinColumn(name = "user_id")
