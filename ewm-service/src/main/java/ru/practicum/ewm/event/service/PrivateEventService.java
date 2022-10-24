@@ -3,6 +3,7 @@ package ru.practicum.ewm.event.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.event.dto.EventResponseDto;
+import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.dto.NewEventDto;
 import ru.practicum.ewm.event.repository.EventRepository;
 
@@ -22,7 +23,7 @@ public class PrivateEventService {
         return null;
     }
 
-    public List<EventResponseDto> getUserOwnEvents(Long userId, int from, int size) {
+    public List<EventShortDto> getUserOwnEvents(Long userId, int from, int size) {
         return null;
     }
 }
