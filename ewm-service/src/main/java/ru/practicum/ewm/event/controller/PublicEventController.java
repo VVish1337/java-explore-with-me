@@ -22,7 +22,7 @@ public class PublicEventController {
                                                  @RequestParam String rangeStart,
                                                  @RequestParam String rangeEnd,
                                                  @RequestParam Boolean onlyAvailable,
-                                                 @RequestParam String sort,
+                                                 @RequestParam(defaultValue = "EVENT_DATE") String sort,
                                                  @RequestParam Integer from,
                                                  @RequestParam Integer size){
         return null;

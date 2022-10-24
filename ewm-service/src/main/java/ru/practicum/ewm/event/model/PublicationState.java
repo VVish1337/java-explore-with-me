@@ -1,5 +1,5 @@
 package ru.practicum.ewm.event.model;
 
-enum PublicationState {
+public enum PublicationState {
     PENDING, PUBLISHED, CANCELED
 }
