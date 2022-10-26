@@ -1,9 +1,6 @@
 package ru.practicum.ewm.event.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.user.model.User;
 
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "events")
@@ -40,7 +38,7 @@ public class Event {
     private Location location;
     private Boolean paid;
     @Column(name = "participant_limit")
-    private int participantLimit;
+    private Integer participantLimit;
     @Column(name = "published_on")
     private LocalDateTime publishedOn;
     @Column(name = "request_moderation")

@@ -1,7 +1,19 @@
 package ru.practicum.ewm.request.dto;
 
-import javax.persistence.Table;
+import lombok.*;
+import ru.practicum.ewm.request.model.Status;
 
+import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ParticipationRequestDto {
+    private Long id;
+    private LocalDateTime created;
+    private Long eventId;
+    private Long requester;
+    private Status status;
 }

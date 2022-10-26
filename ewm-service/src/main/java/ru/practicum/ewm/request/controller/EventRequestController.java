@@ -1,13 +1,23 @@
 package ru.practicum.ewm.request.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
+import ru.practicum.ewm.request.service.EventRequestService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users/{userId}")
 public class EventRequestController {
+
+    private final EventRequestService service;
+
+    @Autowired
+    public EventRequestController(EventRequestService service) {
+        this.service = service;
+    }
+
     @GetMapping("/events/{eventId}/requests")
     public List<ParticipationRequestDto> getEventOwnerRequests(@PathVariable Long userId,
                                                                @PathVariable Long eventId) {
@@ -34,8 +44,9 @@ public class EventRequestController {
     }
 
     @PostMapping("/requests")
-    public ParticipationRequestDto addRequestToEventFromUser(@PathVariable Long userId) {
-        return null;
+    public ParticipationRequestDto addRequestToEventFromUser(@PathVariable Long userId,
+                                                             @RequestParam Long eventId) {
+        return service.addRequestToEventFromUser(userId,eventId);
     }
 
     @PatchMapping("/requests/{requestId}/cancel")

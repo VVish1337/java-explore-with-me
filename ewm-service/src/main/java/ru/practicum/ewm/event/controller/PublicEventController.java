@@ -1,8 +1,10 @@
 package ru.practicum.ewm.event.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventShortDto;
+import ru.practicum.ewm.event.service.PublicEventService;
 
 import java.util.List;
 
@@ -10,9 +12,16 @@ import java.util.List;
 @RequestMapping("/events")
 public class PublicEventController {
 
+    private final PublicEventService service;
+
+    @Autowired
+    public PublicEventController(PublicEventService service) {
+        this.service = service;
+    }
+
     @GetMapping("/{eventId}")
     public EventFullDto getFullEventInfoById(@PathVariable Long eventId){
-        return null;
+        return service.getFullEventInfoById(eventId);
     }
 
     @GetMapping
