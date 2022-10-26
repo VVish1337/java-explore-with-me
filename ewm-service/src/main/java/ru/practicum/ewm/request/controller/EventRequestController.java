@@ -21,26 +21,26 @@ public class EventRequestController {
     @GetMapping("/events/{eventId}/requests")
     public List<ParticipationRequestDto> getEventOwnerRequests(@PathVariable Long userId,
                                                                @PathVariable Long eventId) {
-        return null;
+        return service.getEventOwnerRequests(userId, eventId);
     }
 
     @PatchMapping("/events/{eventId}/requests/{reqId}/confirm")
     public ParticipationRequestDto confirmEventOwnerRequest(@PathVariable Long userId,
                                                             @PathVariable Long eventId,
                                                             @PathVariable Long reqId) {
-        return null;
+        return service.confirmEventOwnerRequest(userId,eventId,reqId);
     }
 
     @PatchMapping("/events/{eventId}/requests/{reqId}/reject")
     public ParticipationRequestDto rejectEventOwnerRequest(@PathVariable Long userId,
                                                            @PathVariable Long eventId,
                                                            @PathVariable Long reqId) {
-        return null;
+        return service.rejectEventOwnerRequest(userId, eventId, reqId);
     }
 
     @GetMapping("/requests")
     public List<ParticipationRequestDto> getUserSelfRequestsInEvents(@PathVariable Long userId) {
-        return null;
+        return service.getUserSelfRequestsInEvents(userId);
     }
 
     @PostMapping("/requests")
@@ -52,6 +52,6 @@ public class EventRequestController {
     @PatchMapping("/requests/{requestId}/cancel")
     public ParticipationRequestDto cancelRequestToEventFromUser(@PathVariable Long userId,
                                                                 @PathVariable Long requestId) {
-        return null;
+        return service.cancelRequestToEventFromUser(userId,requestId);
     }
 }

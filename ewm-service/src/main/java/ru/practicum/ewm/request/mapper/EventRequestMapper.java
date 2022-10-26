@@ -5,6 +5,8 @@ import ru.practicum.ewm.request.model.ParticipationRequest;
 import ru.practicum.ewm.request.model.Status;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EventRequestMapper {
     public static ParticipationRequest toModel(Long userId, Long eventId, Status status){
@@ -24,5 +26,11 @@ public class EventRequestMapper {
                 .requester(request.getRequester())
                 .status(request.getStatus())
                 .build();
+    }
+
+    public static List<ParticipationRequestDto> toDtoList(List<ParticipationRequest> participationRequestList){
+        return participationRequestList.stream()
+                .map(EventRequestMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
