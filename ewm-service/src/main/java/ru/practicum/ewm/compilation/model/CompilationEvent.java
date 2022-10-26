@@ -3,15 +3,17 @@ package ru.practicum.ewm.compilation.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @Entity
 @Builder
+@IdClass(CompilationEventId.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "compilation_events")
-public class CompilationEvent {
+public class CompilationEvent implements Serializable {
     @Id
     @Column(name = "compilation_id")
     private Long compilationId;
