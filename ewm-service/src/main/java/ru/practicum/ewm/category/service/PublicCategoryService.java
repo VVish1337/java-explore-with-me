@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
+import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.util.PaginationUtil;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class PublicCategoryService {
     }
 
     public Category getCategoryById(Long categoryId) {
-        return repository.findById(categoryId).orElseThrow();
+        return repository.findById(categoryId)
+                .orElseThrow(()->new NotFoundException("Not found category with id"+categoryId));
     }
 }

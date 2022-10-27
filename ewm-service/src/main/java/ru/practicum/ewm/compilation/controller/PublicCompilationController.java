@@ -1,5 +1,6 @@
 package ru.practicum.ewm.compilation.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 import static ru.practicum.ewm.util.DefaultValues.DEFAULT_FROM_VALUE;
 import static ru.practicum.ewm.util.DefaultValues.DEFAULT_SIZE_VALUE;
 
+@Slf4j
 @Validated
 @RestController
 @RequestMapping("/compilations")
@@ -30,12 +32,14 @@ public class PublicCompilationController {
                                                    Integer from,
                                                    @Positive @RequestParam(defaultValue = DEFAULT_SIZE_VALUE)
                                                    Integer size) {
-//        return service.getCompilationList(pinned,from, size);
-        return null;
+
+        log.info("Get compilation list pinned:{},from:{},size:{}",pinned,from,size);
+    return service.getCompilationList(pinned,from, size);
     }
 
     @GetMapping("/{compId}")
     public CompilationDto getCompilationById(@PathVariable Long compId){
-        return null;
+        log.info("Get compilation by id:{}",compId);
+        return service.getCompilationById(compId);
     }
 }

@@ -38,7 +38,7 @@ public class EventRequestService {
         if(!event.getState().equals(PublicationState.PUBLISHED)){
             throw new ForbiddenException("Only pending or canceled events can be changed");
         }
-        if(event.getConfirmedRequests()==Long.parseLong(event.getParticipantLimit().toString())){
+        if(event.getConfirmedRequests()>=event.getParticipantLimit()){
             throw new ForbiddenException("Participant limit is reached");
         }
         if(!event.getRequestModeration()){

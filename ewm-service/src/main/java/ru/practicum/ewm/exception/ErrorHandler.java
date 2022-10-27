@@ -46,16 +46,16 @@ public class ErrorHandler {
                 .build();
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handle(Throwable e) {
-        return ApiError.builder()
-                .message("could not execute statement; SQL [n/a]; constraint [uq_category_name];" +
-                        " nested exception is org.hibernate.exception.ConstraintViolationException: " +
-                        "could not execute statement")
-                .reason("Error occurred")
-                .status(Status.INTERNAL_SERVER_ERROR)
-                .timestamp(LocalDateTime.now().format(formatter))
-                .build();
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ApiError handle(Throwable e) {
+//        return ApiError.builder()
+//                .message("could not execute statement; SQL [n/a]; constraint [uq_category_name];" +
+//                        " nested exception is org.hibernate.exception.ConstraintViolationException: " +
+//                        "could not execute statement")
+//                .reason("Error occurred")
+//                .status(Status.INTERNAL_SERVER_ERROR)
+//                .timestamp(LocalDateTime.now().format(formatter))
+//                .build();
+//    }
 }

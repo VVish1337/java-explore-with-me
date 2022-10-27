@@ -1,5 +1,6 @@
 package ru.practicum.ewm.event.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.AdminUpdateEventDto;
@@ -8,6 +9,7 @@ import ru.practicum.ewm.event.service.AdminEventService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/admin/events")
 public class AdminEventController {
@@ -27,17 +29,20 @@ public class AdminEventController {
                                                 @RequestParam String rangeEnd,
                                                 @RequestParam Integer from,
                                                 @RequestParam Integer size){
+        log.info("get Filtered events ");
         return null;
     }
 
     @PutMapping("/{eventId}")
     public EventFullDto updateEventByAdmin(@PathVariable Long eventId,
                                            @RequestBody AdminUpdateEventDto dto){
+        log.info("update event by admin id:{},dto:{}",eventId,dto);
         return service.updateEventByAdmin(eventId, dto);
     }
 
     @PatchMapping("/{eventId}/publish")
     public EventFullDto publishEvent(@PathVariable Long eventId){
+        log.info("");
         return service.publishEvent(eventId);
     }
 

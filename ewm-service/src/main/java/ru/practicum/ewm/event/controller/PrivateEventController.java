@@ -27,7 +27,15 @@ public class PrivateEventController {
     }
 
     @PostMapping
-    public EventFullDto addEvent(@PathVariable long userId, @RequestBody NewEventDto dto) {
+    public EventFullDto addEvent(@PathVariable Long userId, @RequestBody NewEventDto dto) {
+//        try {
+//            System.out.println(dto);
+//
+////
+//            return null;
+//        }catch (Exception e) {
+//            e.printStackTrace();
+//        }
         log.info("post event {}, owner id:{}", dto, userId);
         return service.addEvent(userId, dto);
     }

@@ -24,7 +24,7 @@ public class Event {
     @JoinColumn(name = "category_id")
     private Category category;
     @Column(name = "confirmed_requests")
-    private Long confirmedRequests;
+    private Integer confirmedRequests;
     @Column(name = "created_on")
     private LocalDateTime createdOn;
     private String description;
@@ -33,7 +33,7 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "initiator_id")
     private User initiator;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "location_id")
     private Location location;
     private Boolean paid;

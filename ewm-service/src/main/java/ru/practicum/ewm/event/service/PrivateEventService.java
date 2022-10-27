@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
+
 @Service
 public class PrivateEventService {
     private final EventRepository eventRepository;
@@ -38,7 +40,7 @@ public class PrivateEventService {
 
 
     public EventFullDto addEvent(long userId, NewEventDto dto) {
-        if (dto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+        if (LocalDateTime.parse(dto.getEventDate(),DEFAULT_DATE_FORMATTER).isBefore(LocalDateTime.now().plusHours(2))) {
             throw new ForbiddenException("the event cannot be earlier than 2 hours from the current time");
         }
         User user = userRepository.findById(userId)

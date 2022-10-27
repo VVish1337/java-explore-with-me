@@ -1,15 +1,13 @@
 package ru.practicum.ewm.event.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "locations")
 @NoArgsConstructor
 @AllArgsConstructor
