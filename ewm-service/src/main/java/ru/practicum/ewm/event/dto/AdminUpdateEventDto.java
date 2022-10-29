@@ -15,7 +15,7 @@ public class AdminUpdateEventDto {
     private String annotation;
     private Long category;
     private String description;
-    private LocalDateTime eventDate;
+    private String eventDate;
     private Location location;
     private Boolean paid;
     private Integer participantLimit;

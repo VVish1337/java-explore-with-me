@@ -15,7 +15,7 @@ public class UpdateEventDto {
     private String annotation;
     private Long category;
     private String description;
-    private LocalDateTime eventDate;
+    private String eventDate;
     private Long eventId;
     private Boolean paid;
     private Integer participantLimit;

@@ -16,6 +16,7 @@ import java.util.List;
 public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "compilation_id")
     private Long id;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

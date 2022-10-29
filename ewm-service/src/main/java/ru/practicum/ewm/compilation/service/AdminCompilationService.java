@@ -2,6 +2,7 @@ package ru.practicum.ewm.compilation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
 import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import ru.practicum.ewm.compilation.mapper.CompilationMapper;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@Transactional
 public class AdminCompilationService {
 
     private final CompilationRepository compilationRepository;
@@ -41,10 +43,12 @@ public class AdminCompilationService {
         return CompilationMapper.toDto(compilationRepository.save(CompilationMapper.toModel(dto, eventList)));
     }
 
+    @Transactional
     public void deleteCompilation(Long compId) {
         compilationRepository.deleteById(compId);
     }
 
+    @Transactional
     public void deleteEventFromCompilation(Long compId, Long eventId) {
         compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Compilation not found id:" + compId));

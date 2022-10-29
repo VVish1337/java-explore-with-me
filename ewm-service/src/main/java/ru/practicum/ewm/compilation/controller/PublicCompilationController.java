@@ -27,13 +27,12 @@ public class PublicCompilationController {
     }
 
     @GetMapping()
-    public List<CompilationDto> getCompilationList(@RequestParam Boolean pinned,
+    public List<CompilationDto> getCompilationList(@RequestParam(defaultValue = "false") Boolean pinned,
                                                    @Min(0) @RequestParam(defaultValue = DEFAULT_FROM_VALUE)
                                                    Integer from,
                                                    @Positive @RequestParam(defaultValue = DEFAULT_SIZE_VALUE)
                                                    Integer size) {
-
-        log.info("Get compilation list pinned:{},from:{},size:{}",pinned,from,size);
+    log.info("Get compilation list pinned:{},from:{},size:{}",pinned,from,size);
     return service.getCompilationList(pinned,from, size);
     }
 

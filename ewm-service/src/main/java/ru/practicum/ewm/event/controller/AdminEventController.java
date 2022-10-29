@@ -22,15 +22,15 @@ public class AdminEventController {
     }
 
     @GetMapping
-    public List<EventFullDto> getFilteredEvents(@RequestParam Long[] users,
-                                                @RequestParam String[] states,
-                                                @RequestParam Long[] categories,
+    public List<EventFullDto> getFilteredEvents(@RequestParam List<Long> users,
+                                                @RequestParam List<String> states,
+                                                @RequestParam List<Long> categories,
                                                 @RequestParam String rangeStart,
                                                 @RequestParam String rangeEnd,
                                                 @RequestParam Integer from,
                                                 @RequestParam Integer size){
         log.info("get Filtered events ");
-        return null;
+        return service.getFilteredEvents(users,states,categories,rangeStart,rangeEnd,from,size);
     }
 
     @PutMapping("/{eventId}")
@@ -42,12 +42,13 @@ public class AdminEventController {
 
     @PatchMapping("/{eventId}/publish")
     public EventFullDto publishEvent(@PathVariable Long eventId){
-        log.info("");
+        log.info("publish event id:"+eventId);
         return service.publishEvent(eventId);
     }
 
     @PatchMapping("/{eventId}/reject")
     public EventFullDto rejectEvent(@PathVariable Long eventId){
+        log.info("reject event id:"+eventId);
         return service.rejectEvent(eventId);
     }
 }

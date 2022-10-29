@@ -11,20 +11,15 @@ import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.model.User;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
-import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_TIME_PATTERN;
 
 public class EventMapper {
 
 
-    public static EventFullDto toFullDto(Event event){
-//        if(event.getPublishedOn()!=null){
-//            event.getEventDate().format(DEFAULT_DATE_FORMATTER);
-//        }
+    public static EventFullDto toFullDto(Event event) {
         return EventFullDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
@@ -32,7 +27,7 @@ public class EventMapper {
                 .confirmedRequests(event.getConfirmedRequests())
                 .createdOn(event.getCreatedOn().format(DEFAULT_DATE_FORMATTER))
                 .description(event.getDescription())
-                .initiator(UserMapper.userToShortDto(event.getInitiator()))
+                .initiator(UserMapper.toShortDto(event.getInitiator()))
                 .location(event.getLocation())
                 .eventDate(event.getEventDate().format(DEFAULT_DATE_FORMATTER))
                 .paid(event.getPaid())
@@ -45,21 +40,21 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventShortDto toShortDto(Event event){
+    public static EventShortDto toShortDto(Event event) {
         return EventShortDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.toDto(event.getCategory()))
                 .confirmedRequests(event.getConfirmedRequests())
                 .eventDate(event.getEventDate().format(DEFAULT_DATE_FORMATTER))
-                .initiator(UserMapper.userToShortDto(event.getInitiator()))
+                .initiator(UserMapper.toShortDto(event.getInitiator()))
                 .paid(event.getPaid())
                 .title(event.getTitle())
                 .views(event.getViews())
                 .build();
     }
 
-    public static Event toEvent(NewEventDto dto, Category category, User user){
+    public static Event toEvent(NewEventDto dto, Category category, User user) {
         return Event.builder()
                 .annotation(dto.getAnnotation())
                 .category(category)
@@ -78,9 +73,21 @@ public class EventMapper {
                 .views(0L).build();
     }
 
-    public static List<EventShortDto> toShortDtoList(List<Event> eventList){
+    public static List<EventShortDto> toShortDtoList(List<Event> eventList) {
         return eventList.stream()
                 .map(EventMapper::toShortDto)
+                .collect(Collectors.toList());
+    }
+
+    public static List<EventFullDto> toFullDtoList(List<Event> eventList) {
+        return eventList.stream()
+                .map(EventMapper::toFullDto)
+                .collect(Collectors.toList());
+    }
+
+    public static List<PublicationState> toState(List<String> states) {
+        return states.stream()
+                .map(PublicationState::valueOf)
                 .collect(Collectors.toList());
     }
 }

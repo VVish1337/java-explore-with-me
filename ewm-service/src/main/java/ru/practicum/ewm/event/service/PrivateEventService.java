@@ -85,10 +85,10 @@ public class PrivateEventService {
             event.setDescription(dto.getDescription());
         }
         if (dto.getEventDate() != null) {
-            if (dto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+            if (LocalDateTime.parse(dto.getEventDate(),DEFAULT_DATE_FORMATTER).isBefore(LocalDateTime.now().plusHours(2))) {
                 throw new ForbiddenException("the event cannot be earlier than 2 hours from the current time");
             }
-            event.setEventDate(dto.getEventDate());
+            event.setEventDate(LocalDateTime.parse(dto.getEventDate(),DEFAULT_DATE_FORMATTER));
         }
         if (dto.getPaid() != null) {
             event.setPaid(dto.getPaid());

@@ -26,7 +26,7 @@ public class PublicCompilationService {
 
     public List<CompilationDto> getCompilationList(Boolean pinned, Integer from, Integer size) {
         return CompilationMapper.toDtoList(compilationRepository
-                .findByPinned(pinned, PaginationUtil.getPageable(from, size, Sort.unsorted())).toList());
+                .findAllByPinned(pinned, PaginationUtil.getPageable(from, size, Sort.unsorted())).toList());
     }
 
 
