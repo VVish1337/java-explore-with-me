@@ -2,6 +2,7 @@ package ru.practicum.ewm.event.service;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Sort;
@@ -24,10 +25,12 @@ import ru.practicum.ewm.util.QPredicates;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
 
+@Slf4j
 @Service
 @Transactional
 public class PublicEventService {
@@ -93,13 +96,17 @@ public class PublicEventService {
     }
 
     private void saveStat(HttpServletRequest request) {
-        EventClient client = new EventClient("http://localhost:9090", new RestTemplateBuilder());
-        client.createHit(HitDto.builder()
-                .app("ewm-main-service")
-                .uri(request.getRequestURI())
-                .ip(request.getRemoteAddr())
-                .timestamp(LocalDateTime.now().format(DEFAULT_DATE_FORMATTER))
-                .build());
+        try {
+            EventClient client = new EventClient("http://localhost:9090", new RestTemplateBuilder());
+            client.createHit(HitDto.builder()
+                    .app("ewm-main-service")
+                    .uri(request.getRequestURI())
+                    .ip(request.getRemoteAddr())
+                    .timestamp(LocalDateTime.now().format(DEFAULT_DATE_FORMATTER))
+                    .build());
+        } catch (Exception e) {
+            log.warn("Stat server offline.Stacktrace:{}", Arrays.toString(e.getStackTrace()));
+        }
     }
 
     private void addViewToEventList(List<Event> eventList) {
