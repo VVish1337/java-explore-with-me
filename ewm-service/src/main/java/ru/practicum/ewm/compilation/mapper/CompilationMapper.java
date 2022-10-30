@@ -6,14 +6,12 @@ import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.compilation.model.CompilationEvent;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
-import ru.practicum.ewm.event.repository.EventRepository;
-import ru.practicum.ewm.exception.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CompilationMapper {
-    public static Compilation toModel(NewCompilationDto dto, List<Event> eventList){
+    public static Compilation toModel(NewCompilationDto dto, List<Event> eventList) {
         return Compilation.builder()
                 .events(eventList)
                 .pinned(dto.getPinned())
@@ -21,7 +19,7 @@ public class CompilationMapper {
                 .build();
     }
 
-    public static CompilationDto toDto(Compilation comp){
+    public static CompilationDto toDto(Compilation comp) {
         return CompilationDto.builder()
                 .id(comp.getId())
                 .events(EventMapper.toShortDtoList(comp.getEvents()))
@@ -30,11 +28,11 @@ public class CompilationMapper {
                 .build();
     }
 
-    public static CompilationEvent toModel(Long compId,Long eventId){
-        return new CompilationEvent(compId,eventId);
+    public static CompilationEvent toModel(Long compId, Long eventId) {
+        return new CompilationEvent(compId, eventId);
     }
 
-    public static List<CompilationDto> toDtoList(List<Compilation> compilationList){
+    public static List<CompilationDto> toDtoList(List<Compilation> compilationList) {
         return compilationList.stream()
                 .map(CompilationMapper::toDto)
                 .collect(Collectors.toList());

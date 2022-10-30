@@ -21,7 +21,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handle(IllegalArgumentException ex) {
-        log.warn("Bad Request"+ex.getMessage());
+        log.warn("Bad Request" + ex.getMessage());
         return ApiError.builder()
                 .message(ex.getMessage())
                 .reason("For the requested operation the conditions are not met.")
@@ -32,7 +32,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handle(NotFoundException ex) {
-        log.warn("Not Found Exception"+ex.getMessage());
+        log.warn("Not Found Exception" + ex.getMessage());
         return ApiError.builder()
                 .message(ex.getMessage())
                 .reason("The required object was not found.")
@@ -43,7 +43,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ApiError handle(ForbiddenException ex) {
-        log.warn("Forbidden Exception"+ex.getMessage());
+        log.warn("Forbidden Exception" + ex.getMessage());
         return ApiError.builder()
                 .message(ex.getMessage())
                 .reason("For the requested operation the conditions are not met.")
@@ -55,7 +55,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiError handle(Throwable e) {
-        log.warn("Internal server error:"+e.getMessage()+" stacktrace:"+ Arrays.toString(e.getStackTrace()));
+        log.warn("Internal server error:" + e.getMessage() + " stacktrace:" + Arrays.toString(e.getStackTrace()));
         return ApiError.builder()
                 .message("could not execute statement; SQL [n/a]; constraint [uq_category_name];" +
                         " nested exception is org.hibernate.exception.ConstraintViolationException: " +

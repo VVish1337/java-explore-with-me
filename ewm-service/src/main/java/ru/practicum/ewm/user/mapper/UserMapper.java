@@ -20,11 +20,11 @@ public class UserMapper {
                 user.getName());
     }
 
-    public static UserDto toDto(User user){
+    public static UserDto toDto(User user) {
         return new UserDto(user.getId(), user.getName(), user.getEmail());
     }
 
-    public static List<UserDto> toDtoList(List<User> users){
+    public static List<UserDto> toDtoList(List<User> users) {
         return users.stream()
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());

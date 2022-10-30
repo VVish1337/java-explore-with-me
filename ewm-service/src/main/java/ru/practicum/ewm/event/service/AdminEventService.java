@@ -20,7 +20,6 @@ import ru.practicum.ewm.util.PaginationUtil;
 import ru.practicum.ewm.util.QPredicates;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
@@ -37,8 +36,7 @@ public class AdminEventService {
     }
 
     public EventFullDto updateEventByAdmin(Long eventId, AdminUpdateEventDto dto) {
-      Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found" + eventId));
+        Event event = getEvent(eventId);
         if (dto.getAnnotation() != null) {
             event.setAnnotation(dto.getAnnotation());
         }
@@ -51,10 +49,11 @@ public class AdminEventService {
             event.setDescription(dto.getDescription());
         }
         if (dto.getEventDate() != null) {
-            if (LocalDateTime.parse(dto.getEventDate(),DEFAULT_DATE_FORMATTER).isBefore(LocalDateTime.now().plusHours(2))) {
+            if (LocalDateTime.parse(dto.getEventDate(), DEFAULT_DATE_FORMATTER)
+                    .isBefore(LocalDateTime.now().plusHours(2))) {
                 throw new ForbiddenException("the event cannot be earlier than 2 hours from the current time");
             }
-            event.setEventDate(LocalDateTime.parse(dto.getEventDate(),DEFAULT_DATE_FORMATTER));
+            event.setEventDate(LocalDateTime.parse(dto.getEventDate(), DEFAULT_DATE_FORMATTER));
         }
         if (dto.getLocation() != null) {
             event.setLocation(dto.getLocation());
@@ -76,9 +75,8 @@ public class AdminEventService {
 
 
     public EventFullDto publishEvent(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found" + eventId));
-        if(!event.getState().equals(PublicationState.PENDING)){
+        Event event = getEvent(eventId);
+        if (!event.getState().equals(PublicationState.PENDING)) {
             throw new ForbiddenException("Only pending events can be changed");
         }
         event.setState(PublicationState.PUBLISHED);
@@ -86,9 +84,8 @@ public class AdminEventService {
     }
 
     public EventFullDto rejectEvent(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found" + eventId));
-        if(!event.getState().equals(PublicationState.PENDING)){
+        Event event = getEvent(eventId);
+        if (!event.getState().equals(PublicationState.PENDING)) {
             throw new ForbiddenException("Only pending events can be changed");
         }
         event.setState(PublicationState.CANCELED);
@@ -99,7 +96,7 @@ public class AdminEventService {
                                                 List<Long> categories, String rangeStart,
                                                 String rangeEnd, Integer from, Integer size) {
         EventFilterParams params = new EventFilterParams(
-                users,states,categories,rangeStart,rangeEnd,from,size);
+                users, states, categories, rangeStart, rangeEnd, from, size);
         Predicate predicate = QPredicates.builder()
                 .add(params.getUsers(), QEvent.event.initiator.id::in)
                 .add(params.getStates(), QEvent.event.state::in)
@@ -107,8 +104,12 @@ public class AdminEventService {
                 .add(params.getRangeStart(), QEvent.event.eventDate::goe)
                 .add(params.getRangeEnd(), QEvent.event.eventDate::loe)
                 .buildAnd();
-
         return EventMapper.toFullDtoList(eventRepository.findAll(predicate,
-                PaginationUtil.getPageable(from,size, Sort.unsorted())).toList());
+                PaginationUtil.getPageable(from, size, Sort.unsorted())).toList());
+    }
+
+    private Event getEvent(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event not found id:" + eventId));
     }
 }

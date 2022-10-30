@@ -32,13 +32,13 @@ public class PublicCompilationController {
                                                    Integer from,
                                                    @Positive @RequestParam(defaultValue = DEFAULT_SIZE_VALUE)
                                                    Integer size) {
-    log.info("Get compilation list pinned:{},from:{},size:{}",pinned,from,size);
-    return service.getCompilationList(pinned,from, size);
+        log.info("Get compilation list pinned:{},from:{},size:{}", pinned, from, size);
+        return service.getCompilationList(pinned, from, size);
     }
 
     @GetMapping("/{compId}")
-    public CompilationDto getCompilationById(@PathVariable Long compId){
-        log.info("Get compilation by id:{}",compId);
+    public CompilationDto getCompilationById(@PathVariable Long compId) {
+        log.info("Get compilation by id:{}", compId);
         return service.getCompilationById(compId);
     }
 }

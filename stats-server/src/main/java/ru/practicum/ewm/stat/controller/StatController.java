@@ -23,7 +23,7 @@ public class StatController {
 
     @PostMapping("/hit")
     public void saveHit(@RequestBody HitDto hitDto) {
-        log.info("save hit dto:{}",hitDto);
+        log.info("save hit dto:{}", hitDto);
         service.saveHit(hitDto);
     }
 

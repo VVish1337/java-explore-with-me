@@ -15,7 +15,7 @@ import static ru.practicum.ewm.util.DefaultValues.DEFAULT_SIZE_VALUE;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping(path="/categories")
+@RequestMapping(path = "/categories")
 public class PublicCategoryController {
     private final PublicCategoryService service;
 
@@ -27,13 +27,13 @@ public class PublicCategoryController {
     @GetMapping
     public List<Category> getAllCategories(@RequestParam(defaultValue = DEFAULT_FROM_VALUE) int from,
                                            @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) int size) {
-        log.info("get all categories from:{},size:{}",from,size);
+        log.info("get all categories from:{},size:{}", from, size);
         return service.getAllCategories(from, size);
     }
 
     @GetMapping("{catId}")
     public Category getCategoryById(@PathVariable Long catId) {
-        log.info("get category by id:{}",catId);
+        log.info("get category by id:{}", catId);
         return service.getCategoryById(catId);
     }
 }

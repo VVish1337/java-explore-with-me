@@ -40,9 +40,4 @@ public class AdminUserService {
             return UserMapper.toDtoList(userRepository.findAllById(users));
         }
     }
-
-//    private User checkUserExists(Long userId) {
-//        return userRepository.findById(userId)
-//                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-//    }
 }

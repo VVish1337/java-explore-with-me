@@ -28,7 +28,7 @@ public class EventRequestController {
     public ParticipationRequestDto confirmEventOwnerRequest(@PathVariable Long userId,
                                                             @PathVariable Long eventId,
                                                             @PathVariable Long reqId) {
-        return service.confirmEventOwnerRequest(userId,eventId,reqId);
+        return service.confirmEventOwnerRequest(userId, eventId, reqId);
     }
 
     @PatchMapping("/events/{eventId}/requests/{reqId}/reject")
@@ -46,12 +46,12 @@ public class EventRequestController {
     @PostMapping("/requests")
     public ParticipationRequestDto addRequestToEventFromUser(@PathVariable Long userId,
                                                              @RequestParam Long eventId) {
-        return service.addRequestToEventFromUser(userId,eventId);
+        return service.addRequestToEventFromUser(userId, eventId);
     }
 
     @PatchMapping("/requests/{requestId}/cancel")
     public ParticipationRequestDto cancelRequestToEventFromUser(@PathVariable Long userId,
                                                                 @PathVariable Long requestId) {
-        return service.cancelRequestToEventFromUser(userId,requestId);
+        return service.cancelRequestToEventFromUser(userId, requestId);
     }
 }

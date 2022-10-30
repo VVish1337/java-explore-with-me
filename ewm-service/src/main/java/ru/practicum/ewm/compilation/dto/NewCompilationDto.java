@@ -2,7 +2,6 @@ package ru.practicum.ewm.compilation.dto;
 
 import lombok.*;
 
-import javax.persistence.Entity;
 import java.util.List;
 
 @Getter

@@ -24,7 +24,7 @@ public class AdminCategoryService {
 
     public Category updateCategory(PatchCategoryDto categoryDto) {
         Category oldCategory = repository.findById(categoryDto.getId()).orElseThrow();
-        if(categoryDto.getName()!=null){
+        if (categoryDto.getName() != null) {
             oldCategory.setName(categoryDto.getName());
         }
         return repository.save(oldCategory);

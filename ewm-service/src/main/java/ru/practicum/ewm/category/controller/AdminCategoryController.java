@@ -10,7 +10,7 @@ import ru.practicum.ewm.category.service.AdminCategoryService;
 
 @Slf4j
 @RestController
-@RequestMapping(path="/admin/categories")
+@RequestMapping(path = "/admin/categories")
 public class AdminCategoryController {
     private final AdminCategoryService adminCategoryService;
 
@@ -21,19 +21,19 @@ public class AdminCategoryController {
 
     @PostMapping
     public Category addCategory(@RequestBody PostCategoryDto categoryDto) {
-        log.info("add category :{}",categoryDto);
+        log.info("add category :{}", categoryDto);
         return adminCategoryService.addCategory(categoryDto);
     }
 
     @PatchMapping
-    public Category updateCategory(@RequestBody PatchCategoryDto categoryDto){
-        log.info("add update category :{}",categoryDto);
+    public Category updateCategory(@RequestBody PatchCategoryDto categoryDto) {
+        log.info("add update category :{}", categoryDto);
         return adminCategoryService.updateCategory(categoryDto);
     }
 
     @DeleteMapping("/{categoryId}")
-    public void deleteCategory(@PathVariable Long categoryId){
-        log.info("delete category id:{}",categoryId);
+    public void deleteCategory(@PathVariable Long categoryId) {
+        log.info("delete category id:{}", categoryId);
         adminCategoryService.deleteCategory(categoryId);
     }
 }

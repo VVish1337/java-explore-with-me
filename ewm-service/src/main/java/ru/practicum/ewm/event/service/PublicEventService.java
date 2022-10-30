@@ -12,6 +12,7 @@ import ru.practicum.ewm.client.event.EventClient;
 import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.mapper.EventMapper;
+import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventFilterParams;
 import ru.practicum.ewm.event.model.PublicationState;
 import ru.practicum.ewm.event.model.QEvent;
@@ -25,6 +26,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
+
 @Service
 @Transactional
 public class PublicEventService {
@@ -35,10 +38,12 @@ public class PublicEventService {
         this.eventRepository = eventRepository;
     }
 
-    public EventFullDto getFullEventInfoById(Long eventId,HttpServletRequest request) {
+    public EventFullDto getFullEventInfoById(Long eventId, HttpServletRequest request) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event not found" + eventId));
         saveStat(request);
-        return EventMapper.toFullDto(eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found" + eventId)));
+        addViewToEvent(event);
+        return EventMapper.toFullDto(event);
     }
 
 
@@ -49,12 +54,14 @@ public class PublicEventService {
         EventFilterParams params = new EventFilterParams(text, categories,
                 paid, rangeStart, rangeEnd, onlyAvailable, from, size);
         Predicate predicate = getPredicates(params);
-        if(sort.equals("EVENT_DATE")){
-            sort="eventDate";
+        if (sort.equals("EVENT_DATE")) {
+            sort = "eventDate";
         }
         saveStat(request);
-        return EventMapper.toShortDtoList(eventRepository
-                .findAll(predicate, PaginationUtil.getPageable(from, size, Sort.by(sort))).toList());
+        List<Event> eventList = eventRepository
+                .findAll(predicate, PaginationUtil.getPageable(from, size, Sort.by(sort))).toList();
+        addViewToEventList(eventList);
+        return EventMapper.toShortDtoList(eventList);
     }
 
     private Predicate getPredicates(EventFilterParams params) {
@@ -86,12 +93,24 @@ public class PublicEventService {
     }
 
     private void saveStat(HttpServletRequest request) {
-        EventClient client = new EventClient("http://localhost:9090",new RestTemplateBuilder());
+        EventClient client = new EventClient("http://localhost:9090", new RestTemplateBuilder());
         client.createHit(HitDto.builder()
                 .app("ewm-main-service")
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
-                .timestamp(LocalDateTime.now().toString())
+                .timestamp(LocalDateTime.now().format(DEFAULT_DATE_FORMATTER))
                 .build());
+    }
+
+    private void addViewToEventList(List<Event> eventList) {
+        for (Event event : eventList) {
+            event.setViews(event.getViews() + 1);
+            eventRepository.save(event);
+        }
+    }
+
+    private void addViewToEvent(Event event) {
+        event.setViews(event.getViews() + 1);
+        eventRepository.save(event);
     }
 }

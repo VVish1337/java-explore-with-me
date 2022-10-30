@@ -21,7 +21,7 @@ public class EventClient extends BaseClient {
     }
 
     public void createHit(HitDto hitDto) {
-        log.info("post hit dto:{}",hitDto);
+        log.info("post hit dto:{}", hitDto);
         post("/hit", hitDto);
     }
 }

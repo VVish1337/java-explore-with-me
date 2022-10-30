@@ -18,7 +18,7 @@ import static ru.practicum.ewm.util.DefaultValues.DEFAULT_SIZE_VALUE;
 
 @Slf4j
 @RestController
-@RequestMapping(path="/admin/users")
+@RequestMapping(path = "/admin/users")
 public class AdminUserController {
     private final AdminUserService adminUserService;
 
@@ -31,19 +31,19 @@ public class AdminUserController {
     public List<UserDto> getUsers(@RequestParam List<Long> ids,
                                   @RequestParam(defaultValue = DEFAULT_FROM_VALUE) @Min(0) Integer from,
                                   @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @PositiveOrZero Integer size) {
-        log.info("Get users ids:{},from:{},size:{}",ids,from,size);
-        return adminUserService.getUsers(ids,from,size);
+        log.info("Get users ids:{},from:{},size:{}", ids, from, size);
+        return adminUserService.getUsers(ids, from, size);
     }
 
     @PostMapping
     public User addUser(@RequestBody NewUserDto newUser) {
-        log.info("Add user dto:{}",newUser);
+        log.info("Add user dto:{}", newUser);
         return adminUserService.addUser(newUser);
     }
 
     @DeleteMapping("{userId}")
     public void deleteUser(@PathVariable Long userId) {
-        log.info("Delete user id:{}",userId);
+        log.info("Delete user id:{}", userId);
         adminUserService.deleteUser(userId);
     }
 }

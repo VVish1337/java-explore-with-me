@@ -12,6 +12,10 @@ import java.util.function.Function;
 public class QPredicates {
     private final List<Predicate> predicates = new ArrayList<>();
 
+    public static QPredicates builder() {
+        return new QPredicates();
+    }
+
     public <T> QPredicates add(T object, Function<T, Predicate> function) {
         if (object != null) {
             predicates.add(function.apply(object));
@@ -25,9 +29,5 @@ public class QPredicates {
 
     public Predicate buildOr() {
         return ExpressionUtils.anyOf(predicates);
-    }
-
-    public static QPredicates builder() {
-        return new QPredicates();
     }
 }

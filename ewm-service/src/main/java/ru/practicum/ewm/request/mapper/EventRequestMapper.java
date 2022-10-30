@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EventRequestMapper {
-    public static ParticipationRequest toModel(Long userId, Long eventId, Status status){
+    public static ParticipationRequest toModel(Long userId, Long eventId, Status status) {
         return ParticipationRequest.builder()
                 .created(LocalDateTime.now())
                 .eventId(eventId)
@@ -18,7 +18,7 @@ public class EventRequestMapper {
                 .build();
     }
 
-    public static ParticipationRequestDto toDto(ParticipationRequest request){
+    public static ParticipationRequestDto toDto(ParticipationRequest request) {
         return ParticipationRequestDto.builder()
                 .id(request.getId())
                 .created(request.getCreated())
@@ -28,7 +28,7 @@ public class EventRequestMapper {
                 .build();
     }
 
-    public static List<ParticipationRequestDto> toDtoList(List<ParticipationRequest> participationRequestList){
+    public static List<ParticipationRequestDto> toDtoList(List<ParticipationRequest> participationRequestList) {
         return participationRequestList.stream()
                 .map(EventRequestMapper::toDto)
                 .collect(Collectors.toList());

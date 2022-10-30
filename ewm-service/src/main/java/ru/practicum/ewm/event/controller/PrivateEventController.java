@@ -4,7 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.event.dto.*;
+import ru.practicum.ewm.event.dto.EventFullDto;
+import ru.practicum.ewm.event.dto.EventShortDto;
+import ru.practicum.ewm.event.dto.NewEventDto;
+import ru.practicum.ewm.event.dto.UpdateEventDto;
 import ru.practicum.ewm.event.service.PrivateEventService;
 
 import javax.validation.constraints.Min;
@@ -28,14 +31,6 @@ public class PrivateEventController {
 
     @PostMapping
     public EventFullDto addEvent(@PathVariable Long userId, @RequestBody NewEventDto dto) {
-//        try {
-//            System.out.println(dto);
-//
-////
-//            return null;
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//        }
         log.info("post event {}, owner id:{}", dto, userId);
         return service.addEvent(userId, dto);
     }

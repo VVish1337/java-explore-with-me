@@ -27,8 +27,8 @@ public class StatService {
     }
 
     public List<ViewStats> getStats(String start, String end, List<String> uris, Boolean unique) {
-        LocalDateTime startTime = LocalDateTime.parse(start,formatter);
-        LocalDateTime endTime = LocalDateTime.parse(end,formatter);
+        LocalDateTime startTime = LocalDateTime.parse(start, formatter);
+        LocalDateTime endTime = LocalDateTime.parse(end, formatter);
         if (unique) {
             return repository.findAllViewsUnique(startTime, endTime, uris);
         } else {

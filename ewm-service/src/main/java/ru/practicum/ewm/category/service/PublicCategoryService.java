@@ -20,11 +20,11 @@ public class PublicCategoryService {
     }
 
     public List<Category> getAllCategories(int from, int size) {
-        return repository.findAll(PaginationUtil.getPageable(from,size, Sort.unsorted())).toList();
+        return repository.findAll(PaginationUtil.getPageable(from, size, Sort.unsorted())).toList();
     }
 
     public Category getCategoryById(Long categoryId) {
         return repository.findById(categoryId)
-                .orElseThrow(()->new NotFoundException("Not found category with id"+categoryId));
+                .orElseThrow(() -> new NotFoundException("Not found category with id" + categoryId));
     }
 }

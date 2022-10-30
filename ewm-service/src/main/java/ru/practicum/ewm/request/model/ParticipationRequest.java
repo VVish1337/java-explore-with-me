@@ -1,7 +1,6 @@
 package ru.practicum.ewm.request.model;
 
 import lombok.*;
-import ru.practicum.ewm.event.model.PublicationState;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.ewm.event.model.Location;
 
-import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor

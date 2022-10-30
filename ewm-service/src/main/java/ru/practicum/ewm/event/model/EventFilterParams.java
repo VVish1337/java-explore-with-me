@@ -1,6 +1,5 @@
 package ru.practicum.ewm.event.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.ewm.event.mapper.EventMapper;
@@ -34,10 +33,10 @@ public class EventFilterParams {
         this.categories = categories;
         this.paid = paid;
         if (rangeStart != null) {
-            this.rangeStart = LocalDateTime.parse(rangeStart,DEFAULT_DATE_FORMATTER);
+            this.rangeStart = LocalDateTime.parse(rangeStart, DEFAULT_DATE_FORMATTER);
         }
         if (rangeEnd != null) {
-            this.rangeEnd = LocalDateTime.parse(rangeEnd,DEFAULT_DATE_FORMATTER);
+            this.rangeEnd = LocalDateTime.parse(rangeEnd, DEFAULT_DATE_FORMATTER);
         }
         this.onlyAvailable = onlyAvailable;
         this.from = from;
@@ -48,16 +47,16 @@ public class EventFilterParams {
                              List<Long> categories, String rangeStart,
                              String rangeEnd, Integer from, Integer size) {
 
-            this.users = users;
-            this.states = EventMapper.toState(states);
-            this.categories = categories;
-            if (rangeStart != null) {
-                this.rangeStart = LocalDateTime.parse(rangeStart,DEFAULT_DATE_FORMATTER);
-            }
-            if (rangeEnd != null) {
-                this.rangeEnd = LocalDateTime.parse(rangeEnd,DEFAULT_DATE_FORMATTER);
-            }
-            this.from = from;
-            this.size = size;
+        this.users = users;
+        this.states = EventMapper.toState(states);
+        this.categories = categories;
+        if (rangeStart != null) {
+            this.rangeStart = LocalDateTime.parse(rangeStart, DEFAULT_DATE_FORMATTER);
+        }
+        if (rangeEnd != null) {
+            this.rangeEnd = LocalDateTime.parse(rangeEnd, DEFAULT_DATE_FORMATTER);
+        }
+        this.from = from;
+        this.size = size;
     }
 }

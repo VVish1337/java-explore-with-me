@@ -37,7 +37,7 @@ public class AdminCompilationService {
 
         List<Event> eventList = dto.getEvents().stream()
                 .map(a -> eventRepository.findById(a)
-                        .orElseThrow(() -> new NotFoundException("Event not found id" + a)))
+                        .orElseThrow(() -> new NotFoundException("Event not found id:" + a)))
                 .collect(Collectors.toList());
 
         return CompilationMapper.toDto(compilationRepository.save(CompilationMapper.toModel(dto, eventList)));
@@ -50,36 +50,40 @@ public class AdminCompilationService {
 
     @Transactional
     public void deleteEventFromCompilation(Long compId, Long eventId) {
-        compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Compilation not found id:" + compId));
-        eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found id:" + eventId));
+        checkCompilationExists(compId);
+        checkEventExists(eventId);
         compilationEventRepository.deleteByCompilationIdAndEventId(compId, eventId);
     }
 
     public void addEventToCompilation(Long compId, Long eventId) {
-        compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Compilation not found id:" + compId));
-        eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found id:" + eventId));
+        checkCompilationExists(compId);
+        checkEventExists(eventId);
         compilationEventRepository.save(CompilationMapper.toModel(compId, eventId));
     }
 
     public void unpinCompilation(Long compId) {
-        Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Compilation not found id:" + compId));
-        if(compilation.getPinned()){
+        Compilation compilation = checkCompilationExists(compId);
+        if (compilation.getPinned()) {
             compilation.setPinned(false);
         }
         compilationRepository.save(compilation);
     }
 
     public void pinCompilation(Long compId) {
-        Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Compilation not found id:" + compId));
-        if(!compilation.getPinned()){
+        Compilation compilation = checkCompilationExists(compId);
+        if (!compilation.getPinned()) {
             compilation.setPinned(true);
         }
         compilationRepository.save(compilation);
+    }
+
+    private Compilation checkCompilationExists(Long compId) {
+        return compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation not found id:" + compId));
+    }
+
+    private void checkEventExists(Long eventId) {
+        eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event not found id:" + eventId));
     }
 }

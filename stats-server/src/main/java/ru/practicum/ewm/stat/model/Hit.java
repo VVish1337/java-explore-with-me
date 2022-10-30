@@ -1,11 +1,9 @@
 package ru.practicum.ewm.stat.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
 
 
 @Getter
