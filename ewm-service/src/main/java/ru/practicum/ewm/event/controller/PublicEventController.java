@@ -6,6 +6,7 @@ import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.service.PublicEventService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class PublicEventController {
     }
 
     @GetMapping("/{eventId}")
-    public EventFullDto getFullEventInfoById(@PathVariable Long eventId){
-        return service.getFullEventInfoById(eventId);
+    public EventFullDto getFullEventInfoById(@PathVariable Long eventId, HttpServletRequest request){
+        return service.getFullEventInfoById(eventId,request);
     }
 
     @GetMapping
@@ -34,7 +35,8 @@ public class PublicEventController {
                                                  @RequestParam Boolean onlyAvailable,
                                                  @RequestParam(defaultValue = "EVENT_DATE") String sort,
                                                  @RequestParam Integer from,
-                                                 @RequestParam Integer size){
-        return service.getFilteredEvents(text,categories,paid,rangeStart,rangeEnd,onlyAvailable,sort,from,size);
+                                                 @RequestParam Integer size,
+                                                 HttpServletRequest request){
+        return service.getFilteredEvents(text,categories,paid,rangeStart,rangeEnd,onlyAvailable,sort,from,size,request);
     }
 }

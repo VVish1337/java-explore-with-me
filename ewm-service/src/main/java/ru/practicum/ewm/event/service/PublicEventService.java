@@ -3,9 +3,12 @@ package ru.practicum.ewm.event.service;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.client.dto.HitDto;
+import ru.practicum.ewm.client.event.EventClient;
 import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.mapper.EventMapper;
@@ -17,6 +20,7 @@ import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.util.PaginationUtil;
 import ru.practicum.ewm.util.QPredicates;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +35,8 @@ public class PublicEventService {
         this.eventRepository = eventRepository;
     }
 
-    public EventFullDto getFullEventInfoById(Long eventId) {
+    public EventFullDto getFullEventInfoById(Long eventId,HttpServletRequest request) {
+        saveStat(request);
         return EventMapper.toFullDto(eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event not found" + eventId)));
     }
@@ -40,13 +45,14 @@ public class PublicEventService {
     public List<EventShortDto> getFilteredEvents(String text, List<Long> categories,
                                                  Boolean paid, String rangeStart,
                                                  String rangeEnd, Boolean onlyAvailable,
-                                                 String sort, Integer from, Integer size) {
+                                                 String sort, Integer from, Integer size, HttpServletRequest request) {
         EventFilterParams params = new EventFilterParams(text, categories,
                 paid, rangeStart, rangeEnd, onlyAvailable, from, size);
         Predicate predicate = getPredicates(params);
         if(sort.equals("EVENT_DATE")){
             sort="eventDate";
         }
+        saveStat(request);
         return EventMapper.toShortDtoList(eventRepository
                 .findAll(predicate, PaginationUtil.getPageable(from, size, Sort.by(sort))).toList());
     }
@@ -77,5 +83,15 @@ public class PublicEventService {
         } else {
             return params.getRangeStart();
         }
+    }
+
+    private void saveStat(HttpServletRequest request) {
+        EventClient client = new EventClient("http://localhost:9090",new RestTemplateBuilder());
+        client.createHit(HitDto.builder()
+                .app("ewm-main-service")
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now().toString())
+                .build());
     }
 }

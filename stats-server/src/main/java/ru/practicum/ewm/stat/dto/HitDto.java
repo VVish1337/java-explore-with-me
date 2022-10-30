@@ -1,4 +1,4 @@
-package ru.practicum.ewm.client.dto;
+package ru.practicum.ewm.stat.dto;
 
 import lombok.*;
 
