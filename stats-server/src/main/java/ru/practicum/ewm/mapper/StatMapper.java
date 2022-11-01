@@ -1,8 +1,8 @@
-package ru.practicum.ewm.stat.mapper;
+package ru.practicum.ewm.mapper;
 
 
-import ru.practicum.ewm.stat.dto.HitDto;
-import ru.practicum.ewm.stat.model.Hit;
+import ru.practicum.ewm.dto.HitDto;
+import ru.practicum.ewm.model.Hit;
 
 import java.time.LocalDateTime;
 

@@ -1,11 +1,11 @@
-package ru.practicum.ewm.stat.controller;
+package ru.practicum.ewm.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.stat.StatService;
-import ru.practicum.ewm.stat.dto.HitDto;
-import ru.practicum.ewm.stat.model.ViewStats;
+import ru.practicum.ewm.dto.HitDto;
+import ru.practicum.ewm.model.ViewStat;
 
 import java.util.List;
 
@@ -28,8 +28,8 @@ public class StatController {
     }
 
     @GetMapping("/stats")
-    public List<ViewStats> getStats(@RequestParam String start, @RequestParam String end, @RequestParam List<String> uris,
-                                    @RequestParam(defaultValue = "false") Boolean unique) {
+    public List<ViewStat> getStats(@RequestParam String start, @RequestParam String end, @RequestParam List<String> uris,
+                                   @RequestParam(defaultValue = "false") Boolean unique) {
         return service.getStats(start, end, uris, unique);
     }
 }

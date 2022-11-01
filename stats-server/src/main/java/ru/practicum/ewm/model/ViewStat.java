@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat.model;
+package ru.practicum.ewm.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ViewStats {
+public class ViewStat {
     private String app;
     private String uri;
     private Long hits;
