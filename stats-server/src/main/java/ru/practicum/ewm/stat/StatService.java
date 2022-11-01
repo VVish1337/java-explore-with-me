@@ -2,8 +2,8 @@ package ru.practicum.ewm.stat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.stat.controller.StatMapper;
-import ru.practicum.ewm.stat.controller.StatRepository;
+import ru.practicum.ewm.stat.mapper.StatMapper;
+import ru.practicum.ewm.stat.repository.StatRepository;
 import ru.practicum.ewm.stat.dto.HitDto;
 import ru.practicum.ewm.stat.model.ViewStats;
 
