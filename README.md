@@ -96,24 +96,29 @@ HITS
 - TIME_STAMP - дата и время, когда был совершен запрос к эндпоинту.
   Архитектура приложения.
   ![](ewm-service/src/main/resources/architecture.jpg)
-  -p java-explore-with-me stop stats-server ewm-db ewm-service stats-db
-
 
 **Установка и запуск**
 =
 **Maven Build**
--Склонируйте репозиторий
+Склонируйте репозиторий
 `git@github.com:VVish1337/java-shareit.git`
+
 У вас должен быть установлен `maven`.
 `mvn clean install`
+
 Также нужно скомпилировать target для работы QModules **`(пример QEvent)`**  сторонней библиотеки **[Querydsl](https://github.com/querydsl/querydsl).**
 `mvn compile`
+
 **Docker Build**
 Для работы приложения вам нужен установленый **[docker](https://www.docker.com/)**.Зайдите в корневую папку проекта и введите команду.
+
 `docker-compose build`
+
 **Docker Run**
 Для запуска используйте команду докера.
+
 `docker-compose up`
+
 **Особенности**
 Docker содержит в себе 4 контейнера
 - **stats_server_container**
@@ -127,6 +132,7 @@ Docker содержит в себе 4 контейнера
 
 Сервисы можно запускать по отдельности.Для запуска главного сервера.Нужно ввести команду.
 `docker run ewm-service`
+
 При запуске только главного сервиса не будет вестись статистика.Сервис статистики не будет работать без главного сервиса.
 
 
