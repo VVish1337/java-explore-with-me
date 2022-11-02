@@ -102,24 +102,25 @@ HITS
 **Maven Build**
 
 Склонируйте репозиторий
-`git@github.com:VVish1337/java-shareit.git`
+
+```git@github.com:VVish1337/java-shareit.git```
 
 У вас должен быть установлен `maven`.
 
-`mvn clean install`
+```mvn clean install```
 
 Также нужно скомпилировать target для работы QModules **`(пример QEvent)`**  сторонней библиотеки **[Querydsl](https://github.com/querydsl/querydsl).**
-`mvn compile`
+```mvn compile```
 
 **Docker Build**
 Для работы приложения вам нужен установленый **[docker](https://www.docker.com/)**.Зайдите в корневую папку проекта и введите команду.
 
-`docker-compose build`
+```docker-compose build```
 
 **Docker Run**
 Для запуска используйте команду докера.
 
-`docker-compose up`
+```docker-compose up```
 
 **Особенности**
 Docker содержит в себе 4 контейнера
@@ -133,7 +134,8 @@ Docker содержит в себе 4 контейнера
   **port:6541:5432**
 
 Сервисы можно запускать по отдельности.Для запуска главного сервера.Нужно ввести команду.
-`docker run ewm-service`
+
+```docker run ewm-service```
 
 При запуске только главного сервиса не будет вестись статистика.Сервис статистики не будет работать без главного сервиса.
 
