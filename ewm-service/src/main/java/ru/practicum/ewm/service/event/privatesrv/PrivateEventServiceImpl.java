@@ -107,7 +107,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         Objects.requireNonNull(dto);
         Event event = getEvent(dto.getEventId());
         if (!Objects.equals(event.getInitiator().getId(), userId)) {
-            throw new NotFoundException("User " + userId + " not owner of this event" + event.getId());
+            throw new NotFoundException(USER_NOT_OWNER);
         }
         if (dto.getAnnotation() != null) {
             event.setAnnotation(dto.getAnnotation());

@@ -4,13 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.compilation.CompilationDto;
+import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.compilation.CompilationMapper;
 import ru.practicum.ewm.repository.compilation.CompilationRepository;
-import ru.practicum.ewm.exception.NotFoundException;
-import ru.practicum.ewm.service.compilation.publicsrv.PublicCompilationService;
 import ru.practicum.ewm.util.PaginationUtil;
 
 import java.util.List;
+
+import static ru.practicum.ewm.util.DefaultValues.COMPILATION_NOT_FOUND;
+
 /**
  * Class which describes Compilation service of Public api
  *
@@ -29,6 +31,7 @@ public class PublicCompilationServiceImpl implements PublicCompilationService {
 
     /**
      * Method of service which get Compilation List
+     *
      * @param pinned
      * @param from
      * @param size
@@ -42,12 +45,13 @@ public class PublicCompilationServiceImpl implements PublicCompilationService {
 
     /**
      * Method of service which get Compilation by ID
+     *
      * @param compId
      * @return
      */
     @Override
     public CompilationDto getCompilationById(Long compId) {
         return CompilationMapper.toDto(compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Compilation not found id:" + compId)));
+                .orElseThrow(() -> new NotFoundException(COMPILATION_NOT_FOUND + compId)));
     }
 }

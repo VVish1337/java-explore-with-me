@@ -34,6 +34,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
      */
     @Override
     public Category addCategory(PostCategoryDto categoryDto) {
+        Objects.requireNonNull(categoryDto);
         return repository.save(CategoryMapper.postDtoToCategory(categoryDto));
     }
 

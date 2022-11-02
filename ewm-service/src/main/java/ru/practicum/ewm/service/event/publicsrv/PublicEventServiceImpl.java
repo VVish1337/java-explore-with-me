@@ -118,7 +118,6 @@ public class PublicEventServiceImpl implements PublicEventService {
                 .add(params.getRangeEnd(), QEvent.event.eventDate::loe)
                 .add(PublicationState.PUBLISHED, QEvent.event.state::eq)
                 .buildAnd());
-
         return ExpressionUtils.allOf(predicates);
     }
 

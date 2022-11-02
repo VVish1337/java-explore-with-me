@@ -14,7 +14,11 @@ import ru.practicum.ewm.repository.compilation.CompilationRepository;
 import ru.practicum.ewm.repository.event.EventRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static ru.practicum.ewm.util.DefaultValues.COMPILATION_NOT_FOUND;
+import static ru.practicum.ewm.util.DefaultValues.EVENT_NOT_FOUND;
 
 /**
  * Class which describes Compilation service of Admin api
@@ -46,12 +50,11 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
      */
     @Override
     public CompilationDto addCompilation(NewCompilationDto dto) {
-
+        Objects.requireNonNull(dto);
         List<Event> eventList = dto.getEvents().stream()
                 .map(a -> eventRepository.findById(a)
-                        .orElseThrow(() -> new NotFoundException("Event not found id:" + a)))
+                        .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND + a)))
                 .collect(Collectors.toList());
-
         return CompilationMapper.toDto(compilationRepository.save(CompilationMapper.toModel(dto, eventList)));
     }
 
@@ -129,7 +132,7 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
      */
     private Compilation checkCompilationExists(Long compId) {
         return compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Compilation not found id:" + compId));
+                .orElseThrow(() -> new NotFoundException(COMPILATION_NOT_FOUND + compId));
     }
 
     /**
@@ -139,6 +142,6 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
      */
     private void checkEventExists(Long eventId) {
         eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found id:" + eventId));
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND + eventId));
     }
 }
