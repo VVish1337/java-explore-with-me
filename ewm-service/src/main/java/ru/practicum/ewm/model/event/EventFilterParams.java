@@ -9,6 +9,12 @@ import java.util.List;
 
 import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
 
+/**
+ * Filter class for events
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+
 @Getter
 @Setter
 public class EventFilterParams {

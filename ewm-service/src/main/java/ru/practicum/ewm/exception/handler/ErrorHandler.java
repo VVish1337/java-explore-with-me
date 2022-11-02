@@ -24,7 +24,16 @@ import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_TIME_PATTERN;
 @RestControllerAdvice
 public class ErrorHandler {
 
-   // private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_PATTERN);
+    private final static String DEFAULT_BAD_REQUEST = "For the requested operation the conditions are not met.";
+    private final static String DEFAULT_NOT_FOUND = "The required object was not found.";
+    private final static String DEFAULT_FORBIDDEN = "For the requested operation the conditions are not met.";
+    private final static String DEFAULT_INTERNAL_SERVER_ERROR = "could not execute statement; SQL [n/a]; " +
+            "constraint [uq_category_name];" +
+            " nested exception is org.hibernate.exception.ConstraintViolationException: " +
+            "could not execute statement";
+    private final static String DEFAULT_CONFLICT = "could not execute statement; SQL [n/a]; constraint " +
+            "[uq_category_name]; nested exception is org.hibernate.exception.ConstraintViolationException:" +
+            " could not execute statement";
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -32,7 +41,7 @@ public class ErrorHandler {
         log.warn("Bad Request" + ex.getMessage());
         return ApiError.builder()
                 .message(ex.getMessage())
-                .reason("For the requested operation the conditions are not met.")
+                .reason(DEFAULT_BAD_REQUEST)
                 .status(HttpURLConnection.HTTP_FORBIDDEN)
                 .build();
     }
@@ -43,7 +52,7 @@ public class ErrorHandler {
         log.warn("Not Found Exception" + ex.getMessage());
         return ApiError.builder()
                 .message(ex.getMessage())
-                .reason("The required object was not found.")
+                .reason(DEFAULT_NOT_FOUND)
                 .status(HttpURLConnection.HTTP_NOT_FOUND)
                 .build();
     }
@@ -54,7 +63,7 @@ public class ErrorHandler {
         log.warn("Forbidden Exception" + ex.getMessage());
         return ApiError.builder()
                 .message(ex.getMessage())
-                .reason("For the requested operation the conditions are not met.")
+                .reason(DEFAULT_FORBIDDEN)
                 .status(HttpURLConnection.HTTP_FORBIDDEN)
                 .timestamp(LocalDateTime.now().format(DEFAULT_DATE_FORMATTER))
                 .build();
@@ -65,9 +74,7 @@ public class ErrorHandler {
     public ApiError handle(Throwable e) {
         log.warn("Internal server error:" + e.getMessage() + " stacktrace:" + Arrays.toString(e.getStackTrace()));
         return ApiError.builder()
-                .message("could not execute statement; SQL [n/a]; constraint [uq_category_name];" +
-                        " nested exception is org.hibernate.exception.ConstraintViolationException: " +
-                        "could not execute statement")
+                .message(DEFAULT_INTERNAL_SERVER_ERROR)
                 .reason("Error occurred")
                 .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
                 .timestamp(DateFormatter.formatDate(LocalDateTime.now()))
@@ -80,9 +87,7 @@ public class ErrorHandler {
     public ApiError handle(DataIntegrityViolationException e) {
         log.warn("Internal server error:" + e.getMessage() + " stacktrace:" + Arrays.toString(e.getStackTrace()));
         return ApiError.builder()
-                .message("could not execute statement; SQL [n/a]; constraint [uq_category_name];" +
-                        " nested exception is org.hibernate.exception.ConstraintViolationException: " +
-                        "could not execute statement")
+                .message(DEFAULT_CONFLICT)
                 .reason("Error occurred")
                 .status(HttpURLConnection.HTTP_CONFLICT)
                 .timestamp(DateFormatter.formatDate(LocalDateTime.now()))

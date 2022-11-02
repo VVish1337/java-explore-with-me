@@ -6,17 +6,23 @@ import ru.practicum.ewm.model.Hit;
 
 import java.time.LocalDateTime;
 
-import static ru.practicum.ewm.stat.StatService.formatter;
+import static ru.practicum.ewm.service.StatServiceImpl.formatter;
 
-public class StatMapper {
+/**
+ * Final class which convert HitDto to Hit
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+public final class StatMapper {
 
     public static Hit toModel(HitDto dto) {
-            return Hit.builder()
+        return Hit.builder()
                 .id(dto.getId())
                 .app(dto.getApp())
                 .uri(dto.getUri())
                 .ip(dto.getIp())
-                .timestamp(LocalDateTime.parse(dto.getTimestamp(),formatter))
+                .timestamp(LocalDateTime.parse(dto.getTimestamp(), formatter))
                 .build();
     }
 }

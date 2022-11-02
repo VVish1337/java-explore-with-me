@@ -5,6 +5,12 @@ import ru.practicum.ewm.dto.event.EventShortDto;
 
 import java.util.List;
 
+/**
+ * Dto of compilation class.
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Getter
 @Setter
 @Builder

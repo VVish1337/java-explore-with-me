@@ -5,6 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Dto of category class.
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+
 @Getter
 @Setter
 @NoArgsConstructor

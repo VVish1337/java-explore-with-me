@@ -5,6 +5,12 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * Class describing events of compilation
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+
 @Getter
 @Setter
 @Entity

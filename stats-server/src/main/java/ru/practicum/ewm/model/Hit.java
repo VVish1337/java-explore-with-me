@@ -5,7 +5,12 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
+/**
+ * Class which describes Hit(Statistic of viewer)
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Getter
 @Entity
 @Setter

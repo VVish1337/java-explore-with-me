@@ -1,30 +1,38 @@
 package ru.practicum.ewm.service.event.privatesrv;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.model.category.Category;
-import ru.practicum.ewm.repository.category.CategoryRepository;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.event.UpdateEventDto;
-import ru.practicum.ewm.mapper.event.EventMapper;
-import ru.practicum.ewm.model.event.Event;
-import ru.practicum.ewm.model.event.PublicationState;
-import ru.practicum.ewm.repository.event.EventRepository;
 import ru.practicum.ewm.exception.ForbiddenException;
 import ru.practicum.ewm.exception.NotFoundException;
+import ru.practicum.ewm.mapper.event.EventMapper;
+import ru.practicum.ewm.model.category.Category;
+import ru.practicum.ewm.model.event.Event;
+import ru.practicum.ewm.model.event.PublicationState;
 import ru.practicum.ewm.model.user.User;
+import ru.practicum.ewm.repository.category.CategoryRepository;
+import ru.practicum.ewm.repository.event.EventRepository;
 import ru.practicum.ewm.repository.user.UserRepository;
+import ru.practicum.ewm.util.DateFormatter;
 import ru.practicum.ewm.util.PaginationUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
+import static ru.practicum.ewm.util.DefaultValues.*;
 
+/**
+ * Class which describes Event service of Private api
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Service
 public class PrivateEventServiceImpl implements PrivateEventService {
     private final EventRepository eventRepository;
@@ -32,22 +40,39 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private final CategoryRepository categoryRepository;
 
     @Autowired
-    public PrivateEventServiceImpl(EventRepository eventRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
+    public PrivateEventServiceImpl(EventRepository eventRepository, UserRepository userRepository,
+                                   CategoryRepository categoryRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
     }
 
+    /**
+     * Method of service which add Event by user
+     *
+     * @param userId
+     * @param dto
+     * @return EventFullDto
+     */
     @Override
     public EventFullDto addEvent(long userId, NewEventDto dto) {
-        if (LocalDateTime.parse(dto.getEventDate(), DEFAULT_DATE_FORMATTER).isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new ForbiddenException("the event cannot be earlier than 2 hours from the current time");
+        Objects.requireNonNull(dto);
+        if (DateFormatter.stringToDate(dto.getEventDate()).isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new DataIntegrityViolationException(WRONG_DATE);
         }
         User user = checkUserExists(userId);
         Category category = getCategory(dto.getCategory());
         return EventMapper.toFullDto(eventRepository.save(EventMapper.toEvent(dto, category, user)));
     }
 
+    /**
+     * Method of service which get list of User owned Events
+     *
+     * @param userId
+     * @param from
+     * @param size
+     * @return List of EventShortDto
+     */
     @Override
     public List<EventShortDto> getUserOwnEvents(Long userId, int from, int size) {
         checkUserExists(userId);
@@ -56,6 +81,13 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                 .toList());
     }
 
+    /**
+     * Method of service which get full information by User owner of Event by id
+     *
+     * @param userId
+     * @param eventId
+     * @return EventFullDto
+     */
     @Override
     public EventFullDto getUserFullEventById(Long userId, Long eventId) {
         checkUserExists(userId);
@@ -63,8 +95,16 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         return EventMapper.toFullDto(eventRepository.findByInitiatorIdAndId(userId, eventId));
     }
 
+    /**
+     * Method of service which update Event by User owner
+     *
+     * @param userId
+     * @param dto
+     * @return
+     */
     @Override
     public EventFullDto updateEventByUserOwner(Long userId, UpdateEventDto dto) {
+        Objects.requireNonNull(dto);
         Event event = getEvent(dto.getEventId());
         if (!Objects.equals(event.getInitiator().getId(), userId)) {
             throw new NotFoundException("User " + userId + " not owner of this event" + event.getId());
@@ -80,11 +120,10 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             event.setDescription(dto.getDescription());
         }
         if (dto.getEventDate() != null) {
-            if (LocalDateTime.parse(dto.getEventDate(), DEFAULT_DATE_FORMATTER)
-                    .isBefore(LocalDateTime.now().plusHours(2))) {
-                throw new ForbiddenException("the event cannot be earlier than 2 hours from the current time");
+            if (DateFormatter.stringToDate(dto.getEventDate()).isBefore(LocalDateTime.now().plusHours(2))) {
+                throw new ForbiddenException(WRONG_DATE);
             }
-            event.setEventDate(LocalDateTime.parse(dto.getEventDate(), DEFAULT_DATE_FORMATTER));
+            event.setEventDate(DateFormatter.stringToDate(dto.getEventDate()));
         }
         if (dto.getPaid() != null) {
             event.setPaid(dto.getPaid());
@@ -98,6 +137,13 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         return EventMapper.toFullDto(eventRepository.save(event));
     }
 
+    /**
+     * Method of service which cancel Event from publish by User owner
+     *
+     * @param userId
+     * @param eventId
+     * @return
+     */
     @Override
     public EventFullDto cancelEventByUserOwner(Long userId, Long eventId) {
         checkUserExists(userId);
@@ -113,18 +159,36 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         return EventMapper.toFullDto(eventRepository.save(event));
     }
 
+    /**
+     * Private method of service which check User existence
+     *
+     * @param userId
+     * @return User
+     */
     private User checkUserExists(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found id:" + userId));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + userId));
     }
 
+    /**
+     * Private method of service which check Event existence
+     *
+     * @param eventId
+     * @return Event
+     */
     private Event getEvent(Long eventId) {
         return eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found id:" + eventId));
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND + eventId));
     }
 
+    /**
+     * Private method of service which check Category existence
+     *
+     * @param categoryId
+     * @return Category
+     */
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("Category not found id:" + categoryId));
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND + categoryId));
     }
 }

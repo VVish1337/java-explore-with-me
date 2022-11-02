@@ -4,6 +4,12 @@ import lombok.*;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.dto.user.UserShortDto;
 
+/**
+ * Class which describes event short information dto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Getter
 @Setter
 @Builder

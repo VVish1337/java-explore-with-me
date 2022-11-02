@@ -2,6 +2,12 @@ package ru.practicum.ewm.dto;
 
 import lombok.*;
 
+/**
+ * Class which describes Hit dto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Getter
 @Setter
 @Builder

@@ -2,15 +2,21 @@ package ru.practicum.ewm.mapper.compilation;
 
 import ru.practicum.ewm.dto.compilation.CompilationDto;
 import ru.practicum.ewm.dto.compilation.NewCompilationDto;
+import ru.practicum.ewm.mapper.event.EventMapper;
 import ru.practicum.ewm.model.compilation.Compilation;
 import ru.practicum.ewm.model.compilation.CompilationEvent;
-import ru.practicum.ewm.mapper.event.EventMapper;
 import ru.practicum.ewm.model.event.Event;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CompilationMapper {
+/**
+ * Final class which describes compilation mapping from Compilation to CompilationDto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+public final class CompilationMapper {
     public static Compilation toModel(NewCompilationDto dto, List<Event> eventList) {
         return Compilation.builder()
                 .events(eventList)

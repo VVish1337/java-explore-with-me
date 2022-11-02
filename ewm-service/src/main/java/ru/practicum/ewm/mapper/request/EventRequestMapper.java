@@ -8,7 +8,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EventRequestMapper {
+/**
+ * Final class which describes event request mapping from EventRequest to EventRequestDto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+public final class EventRequestMapper {
     public static ParticipationRequest toModel(Long userId, Long eventId, Status status) {
         return ParticipationRequest.builder()
                 .created(LocalDateTime.now())

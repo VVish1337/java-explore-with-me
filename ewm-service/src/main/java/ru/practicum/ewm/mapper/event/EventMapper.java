@@ -1,13 +1,13 @@
 package ru.practicum.ewm.mapper.event;
 
-import ru.practicum.ewm.mapper.category.CategoryMapper;
-import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
+import ru.practicum.ewm.mapper.category.CategoryMapper;
+import ru.practicum.ewm.mapper.user.UserMapper;
+import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.model.event.PublicationState;
-import ru.practicum.ewm.mapper.user.UserMapper;
 import ru.practicum.ewm.model.user.User;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,13 @@ import java.util.stream.Collectors;
 
 import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
 
-public class EventMapper {
+/**
+ * Final class which describes event mapping from Event to EventDto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+public final class EventMapper {
 
 
     public static EventFullDto toFullDto(Event event) {

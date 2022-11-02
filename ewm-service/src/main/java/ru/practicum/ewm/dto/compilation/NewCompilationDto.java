@@ -4,6 +4,12 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Dto of new compilation class.
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Getter
 @Setter
 @Builder

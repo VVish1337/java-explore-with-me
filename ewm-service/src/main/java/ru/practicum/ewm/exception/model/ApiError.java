@@ -1,7 +1,6 @@
 package ru.practicum.ewm.exception.model;
 
 import lombok.*;
-import ru.practicum.ewm.exception.Status;
 
 @Getter
 @Setter

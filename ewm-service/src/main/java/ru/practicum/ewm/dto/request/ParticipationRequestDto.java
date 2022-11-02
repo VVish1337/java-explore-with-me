@@ -5,6 +5,12 @@ import ru.practicum.ewm.model.request.Status;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class which describes participation request dto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Getter
 @Setter
 @Builder

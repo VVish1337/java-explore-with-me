@@ -5,6 +5,12 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Class describing participant requests of event challenger.
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+
 @Getter
 @Setter
 @Entity

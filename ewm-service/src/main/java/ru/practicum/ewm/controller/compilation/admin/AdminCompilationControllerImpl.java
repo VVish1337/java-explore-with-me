@@ -7,6 +7,13 @@ import ru.practicum.ewm.dto.compilation.CompilationDto;
 import ru.practicum.ewm.dto.compilation.NewCompilationDto;
 import ru.practicum.ewm.service.compilation.admin.AdminCompilationService;
 
+/**
+ * Class describing compilation controller for Admin api.
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+
 @Slf4j
 @RestController
 @RequestMapping("/admin/compilations")
@@ -18,6 +25,13 @@ public class AdminCompilationControllerImpl implements AdminCompilationControlle
         this.service = service;
     }
 
+
+    /**
+     * Endpoint of controller which add compilations
+     *
+     * @param dto
+     * @return CompilationDto
+     */
     @Override
     @PostMapping
     public CompilationDto addCompilation(@RequestBody NewCompilationDto dto) {
@@ -25,6 +39,11 @@ public class AdminCompilationControllerImpl implements AdminCompilationControlle
         return service.addCompilation(dto);
     }
 
+    /**
+     * Endpoint of controller which delete compilations
+     *
+     * @param compId
+     */
     @Override
     @DeleteMapping("/{compId}")
     public void deleteCompilation(@PathVariable() Long compId) {
@@ -32,6 +51,12 @@ public class AdminCompilationControllerImpl implements AdminCompilationControlle
         service.deleteCompilation(compId);
     }
 
+    /**
+     * Endpoint of controller which delete events from compilation
+     *
+     * @param compId
+     * @param eventId
+     */
     @Override
     @DeleteMapping("/{compId}/events/{eventId}")
     public void deleteEventFromCompilation(@PathVariable Long compId,
@@ -40,6 +65,12 @@ public class AdminCompilationControllerImpl implements AdminCompilationControlle
         service.deleteEventFromCompilation(compId, eventId);
     }
 
+    /**
+     * Endpoint of controller which adding events to compilations
+     *
+     * @param compId
+     * @param eventId
+     */
     @Override
     @PatchMapping("/{compId}/events/{eventId}")
     public void addEventToCompilation(@PathVariable Long compId,
@@ -48,6 +79,11 @@ public class AdminCompilationControllerImpl implements AdminCompilationControlle
         service.addEventToCompilation(compId, eventId);
     }
 
+    /**
+     * Endpoint of controller which unpin compilations from main page of frontend
+     *
+     * @param compId
+     */
     @Override
     @DeleteMapping("/{compId}/pin")
     public void unpinCompilation(@PathVariable Long compId) {
@@ -55,6 +91,11 @@ public class AdminCompilationControllerImpl implements AdminCompilationControlle
         service.unpinCompilation(compId);
     }
 
+    /**
+     * Endpoint of controller which pin compilations to main page of frontend
+     *
+     * @param compId
+     */
     @Override
     @PatchMapping("/{compId}/pin")
     public void pinCompilation(@PathVariable Long compId) {

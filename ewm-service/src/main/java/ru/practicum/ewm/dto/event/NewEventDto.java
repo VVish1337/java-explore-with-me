@@ -7,6 +7,12 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewm.model.event.Location;
 
+/**
+ * Class which describes new event dto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Getter
 @Setter
 @NoArgsConstructor

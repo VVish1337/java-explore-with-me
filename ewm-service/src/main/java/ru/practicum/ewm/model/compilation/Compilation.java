@@ -6,6 +6,12 @@ import ru.practicum.ewm.model.event.Event;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Class describing compilations of events
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+
 @Getter
 @Setter
 @Entity

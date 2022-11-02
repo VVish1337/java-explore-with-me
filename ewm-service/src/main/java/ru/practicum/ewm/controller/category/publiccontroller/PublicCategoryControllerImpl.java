@@ -1,16 +1,23 @@
-package ru.practicum.ewm.controller.category;
+package ru.practicum.ewm.controller.category.publiccontroller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.model.category.Category;
-import ru.practicum.ewm.service.category.PublicCategoryService;
+import ru.practicum.ewm.service.category.publicsrv.PublicCategoryService;
 
 import java.util.List;
 
 import static ru.practicum.ewm.util.DefaultValues.DEFAULT_FROM_VALUE;
 import static ru.practicum.ewm.util.DefaultValues.DEFAULT_SIZE_VALUE;
+
+/**
+ * Class describing category controller for Public api.
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 
 @Slf4j
 @Validated
@@ -24,6 +31,14 @@ public class PublicCategoryControllerImpl implements PublicCategoryController {
         this.service = service;
     }
 
+
+    /**
+     * Endpoint of controller which getting all categories
+     *
+     * @param from
+     * @param size
+     * @return List of Category
+     */
     @Override
     @GetMapping
     public List<Category> getAllCategories(@RequestParam(defaultValue = DEFAULT_FROM_VALUE) int from,
@@ -32,6 +47,12 @@ public class PublicCategoryControllerImpl implements PublicCategoryController {
         return service.getAllCategories(from, size);
     }
 
+    /**
+     * Endpoint of controller which getting category by id
+     *
+     * @param catId
+     * @return List of Category
+     */
     @Override
     @GetMapping("{catId}")
     public Category getCategoryById(@PathVariable Long catId) {

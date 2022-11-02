@@ -1,4 +1,4 @@
-package ru.practicum.ewm.service.event;
+package ru.practicum.ewm.service.event.publicsrv;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
@@ -8,17 +8,18 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dto.HitDto;
 import ru.practicum.ewm.client.EventClient;
+import ru.practicum.ewm.dto.HitDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
+import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.event.EventMapper;
 import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.model.event.EventFilterParams;
 import ru.practicum.ewm.model.event.PublicationState;
 import ru.practicum.ewm.model.event.QEvent;
 import ru.practicum.ewm.repository.event.EventRepository;
-import ru.practicum.ewm.exception.NotFoundException;
+import ru.practicum.ewm.util.DateFormatter;
 import ru.practicum.ewm.util.PaginationUtil;
 import ru.practicum.ewm.util.QPredicates;
 
@@ -28,8 +29,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
+import static ru.practicum.ewm.util.DefaultValues.EVENT_NOT_FOUND;
 
+/**
+ * Class which describes Event service of Public api
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Slf4j
 @Service
 @Transactional
@@ -41,15 +48,37 @@ public class PublicEventServiceImpl implements PublicEventService {
         this.eventRepository = eventRepository;
     }
 
+    /**
+     * Method of service which get full information about Event by ID
+     *
+     * @param eventId
+     * @param request
+     * @return EventFullDto
+     */
     @Override
     public EventFullDto getFullEventInfoById(Long eventId, HttpServletRequest request) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found" + eventId));
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND + eventId));
         saveStat(request);
         addViewToEvent(event);
         return EventMapper.toFullDto(event);
     }
 
+    /**
+     * Method of service which get filtered Event list
+     *
+     * @param text
+     * @param categories
+     * @param paid
+     * @param rangeStart
+     * @param rangeEnd
+     * @param onlyAvailable
+     * @param sort
+     * @param from
+     * @param size
+     * @param request
+     * @return List of EventShortDto
+     */
     @Override
     public List<EventShortDto> getFilteredEvents(String text, List<Long> categories,
                                                  Boolean paid, String rangeStart,
@@ -68,9 +97,14 @@ public class PublicEventServiceImpl implements PublicEventService {
         return EventMapper.toShortDtoList(eventList);
     }
 
+    /**
+     * Private method of service which get predicates from EventFilterParams
+     *
+     * @param params
+     * @return EventFilterParams
+     */
     private Predicate getPredicates(EventFilterParams params) {
         LocalDateTime timeNow = checkDate(params);
-
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(QPredicates.builder()
                 .add(params.getText(), QEvent.event.annotation::likeIgnoreCase)
@@ -88,6 +122,12 @@ public class PublicEventServiceImpl implements PublicEventService {
         return ExpressionUtils.allOf(predicates);
     }
 
+    /**
+     * Private method of service which check filter param date of Event on null
+     *
+     * @param params
+     * @return LocalDateTime
+     */
     private LocalDateTime checkDate(EventFilterParams params) {
         if (params.getRangeStart() == null ||
                 params.getRangeEnd() == null) {
@@ -97,6 +137,11 @@ public class PublicEventServiceImpl implements PublicEventService {
         }
     }
 
+    /**
+     * Private method of service Client which send statistic of viewer to statistic service
+     *
+     * @param request
+     */
     private void saveStat(HttpServletRequest request) {
         try {
             EventClient client = new EventClient("http://localhost:9090", new RestTemplateBuilder());
@@ -104,7 +149,7 @@ public class PublicEventServiceImpl implements PublicEventService {
                     .app("ewm-main-service")
                     .uri(request.getRequestURI())
                     .ip(request.getRemoteAddr())
-                    .timestamp(LocalDateTime.now().format(DEFAULT_DATE_FORMATTER))
+                    .timestamp(DateFormatter.formatDate(LocalDateTime.now()))
                     .build());
         } catch (Exception e) {
             log.warn("Stat server offline.Stacktrace:{}", Arrays.toString(e.getStackTrace()));

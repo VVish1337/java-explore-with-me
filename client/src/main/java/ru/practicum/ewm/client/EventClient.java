@@ -10,6 +10,12 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.ewm.client.base.BaseClient;
 import ru.practicum.ewm.dto.HitDto;
 
+/**
+ * Class which describes client which send data from main service to statistic-service
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class EventClient extends BaseClient {

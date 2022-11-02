@@ -5,6 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Class which describes user dto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Setter
 @Getter
 @NoArgsConstructor

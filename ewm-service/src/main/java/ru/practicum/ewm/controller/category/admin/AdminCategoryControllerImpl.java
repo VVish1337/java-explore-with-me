@@ -8,17 +8,31 @@ import ru.practicum.ewm.dto.category.PostCategoryDto;
 import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.service.category.admin.AdminCategoryService;
 
+/**
+ * Class describing category controller for Admin api.
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+
 @Slf4j
 @RestController
 @RequestMapping(path = "/admin/categories")
 public class AdminCategoryControllerImpl implements AdminCategoryController {
     private final AdminCategoryService adminCategoryService;
 
+
     @Autowired
     public AdminCategoryControllerImpl(AdminCategoryService adminCategoryService) {
         this.adminCategoryService = adminCategoryService;
     }
 
+    /**
+     * Endpoint method which adding category
+     *
+     * @param categoryDto
+     * @return Category
+     */
     @Override
     @PostMapping
     public Category addCategory(@RequestBody PostCategoryDto categoryDto) {
@@ -26,6 +40,12 @@ public class AdminCategoryControllerImpl implements AdminCategoryController {
         return adminCategoryService.addCategory(categoryDto);
     }
 
+    /**
+     * Endpoint of controller which updating category
+     *
+     * @param categoryDto
+     * @return Category
+     */
     @Override
     @PatchMapping
     public Category updateCategory(@RequestBody PatchCategoryDto categoryDto) {
@@ -33,6 +53,11 @@ public class AdminCategoryControllerImpl implements AdminCategoryController {
         return adminCategoryService.updateCategory(categoryDto);
     }
 
+    /**
+     * Endpoint of controller which delete category
+     *
+     * @param categoryId
+     */
     @Override
     @DeleteMapping("/{categoryId}")
     public void deleteCategory(@PathVariable Long categoryId) {

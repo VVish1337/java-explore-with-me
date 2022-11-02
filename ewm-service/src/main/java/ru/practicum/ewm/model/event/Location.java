@@ -4,6 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * Filter class for events
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+
 @Getter
 @Setter
 @Entity

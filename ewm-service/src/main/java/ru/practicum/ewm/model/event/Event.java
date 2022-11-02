@@ -7,6 +7,12 @@ import ru.practicum.ewm.model.user.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Class describing event
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+
 @Getter
 @Setter
 @Entity

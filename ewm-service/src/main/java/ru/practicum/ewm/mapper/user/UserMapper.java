@@ -8,7 +8,13 @@ import ru.practicum.ewm.model.user.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserMapper {
+/**
+ * Final class which describes category mapping from User to UserDto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
+public final class UserMapper {
     public static User toModel(NewUserDto newUser) {
         return new User(null,
                 newUser.getEmail(),
