@@ -100,10 +100,12 @@ HITS
 **Установка и запуск**
 =
 **Maven Build**
+
 Склонируйте репозиторий
 `git@github.com:VVish1337/java-shareit.git`
 
 У вас должен быть установлен `maven`.
+
 `mvn clean install`
 
 Также нужно скомпилировать target для работы QModules **`(пример QEvent)`**  сторонней библиотеки **[Querydsl](https://github.com/querydsl/querydsl).**
