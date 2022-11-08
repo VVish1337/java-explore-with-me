@@ -4,18 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.event.EventShortDto;
-import ru.practicum.ewm.dto.event.NewEventDto;
-import ru.practicum.ewm.dto.event.UpdateEventDto;
+import ru.practicum.ewm.dto.event.*;
 import ru.practicum.ewm.exception.ForbiddenException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.event.EventMapper;
 import ru.practicum.ewm.model.category.Category;
+import ru.practicum.ewm.model.event.Comment;
 import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.model.event.PublicationState;
 import ru.practicum.ewm.model.user.User;
 import ru.practicum.ewm.repository.category.CategoryRepository;
+import ru.practicum.ewm.repository.event.CommentRepository;
 import ru.practicum.ewm.repository.event.EventRepository;
 import ru.practicum.ewm.repository.user.UserRepository;
 import ru.practicum.ewm.util.DateFormatter;
@@ -38,13 +37,15 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
     public PrivateEventServiceImpl(EventRepository eventRepository, UserRepository userRepository,
-                                   CategoryRepository categoryRepository) {
+                                   CategoryRepository categoryRepository, CommentRepository commentRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.commentRepository = commentRepository;
     }
 
     /**
@@ -157,6 +158,49 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             event.setState(PublicationState.CANCELED);
         }
         return EventMapper.toFullDto(eventRepository.save(event));
+    }
+
+    @Override
+    public CommentDto addCommentToEvent(Long userId, Long eventId, String text) {
+        if (text.isEmpty() || text.isBlank()) {
+            throw new NotFoundException(DEFAULT_TEXT_EMPTY);
+        }
+        User user = checkUserExists(userId);
+        Event event = getEvent(eventId);
+        return EventMapper.toCommentDto(commentRepository.save(EventMapper.toCommentModel(user, event, text)));
+    }
+
+    @Override
+    public CommentDto updateCommentByUserOwner(Long userId, Long eventId, Long comId, String text) {
+        if (text.isEmpty() || text.isBlank()) {
+            throw new NotFoundException(DEFAULT_TEXT_EMPTY);
+        }
+        Comment comment = commentRepository.findById(comId)
+                .orElseThrow(()->new NotFoundException("Comment not found id:"+comId));
+        User user = checkUserExists(userId);
+        if(!comment.getUser().getId().equals(userId)){
+            throw new ForbiddenException("User not owner of comment");
+        }
+        Event event = getEvent(eventId);
+        if(!comment.getEvent().getId().equals(eventId)){
+            throw new ForbiddenException("This comment not in this event");
+        }
+        return EventMapper.toCommentDto(comment);
+    }
+
+    @Override
+    public void deleteCommentByUserOwner(Long userId, Long eventId, Long comId) {
+        Comment comment = commentRepository.findById(comId)
+                .orElseThrow(()->new NotFoundException("Comment not found id:"+comId));
+        User user = checkUserExists(userId);
+        if(!comment.getUser().getId().equals(userId)){
+            throw new ForbiddenException("User not owner of comment");
+        }
+        Event event = getEvent(eventId);
+        if(!comment.getEvent().getId().equals(eventId)){
+            throw new ForbiddenException("This comment not in this event");
+        }
+        commentRepository.deleteById(comId);
     }
 
     /**

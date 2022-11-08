@@ -1,9 +1,10 @@
-package ru.practicum.ewm.controller.event.privatecontroller.admin;
+package ru.practicum.ewm.controller.event.admin;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.event.AdminUpdateEventDto;
+import ru.practicum.ewm.dto.event.CommentDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.service.event.admin.AdminEventService;
 
@@ -92,4 +93,13 @@ public class AdminEventControllerImpl implements AdminEventController {
         log.info("reject event id:" + eventId);
         return service.rejectEvent(eventId);
     }
+
+    @Override
+    @DeleteMapping("{eventId}/comments/{comId}")
+    public void deleteCommentByAdmin(@PathVariable Long eventId, @PathVariable Long comId){
+        log.info("Delete comment by admin eventId:{},comId{}",eventId,comId);
+        service.deleteCommentByAdmin(eventId,comId);
+    }
+
+
 }

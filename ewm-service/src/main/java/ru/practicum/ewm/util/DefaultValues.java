@@ -23,4 +23,5 @@ public final class DefaultValues {
     public static final String PENDING_ERROR = "Only pending events can be changed";
     public static final String USER_NOT_OWNER = "User not owner of event";
     public static final String PARTICIPANT_LIMIT = "Participant limit is reached";
+    public static final String DEFAULT_TEXT_EMPTY = "Text is empty or blank";
 }

@@ -1,14 +1,14 @@
 package ru.practicum.ewm.mapper.event;
 
-import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.event.EventShortDto;
-import ru.practicum.ewm.dto.event.NewEventDto;
+import ru.practicum.ewm.dto.event.*;
 import ru.practicum.ewm.mapper.category.CategoryMapper;
 import ru.practicum.ewm.mapper.user.UserMapper;
 import ru.practicum.ewm.model.category.Category;
+import ru.practicum.ewm.model.event.Comment;
 import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.model.event.PublicationState;
 import ru.practicum.ewm.model.user.User;
+import ru.practicum.ewm.util.DateFormatter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -96,4 +96,62 @@ public final class EventMapper {
                 .map(PublicationState::valueOf)
                 .collect(Collectors.toList());
     }
+
+    public static Comment toCommentModel(User user, Event event, String text) {
+        return Comment.builder()
+                .event(event)
+                .user(user)
+                .text(text)
+                .createdOn(LocalDateTime.now())
+                .build();
+    }
+
+    public static CommentDto toCommentDto(Comment comment) {
+        return CommentDto.builder()
+                .eventId(comment.getEvent().getId())
+                .userId(comment.getUser().getId())
+                .text(comment.getText())
+                .createdOn(DateFormatter.formatDate(comment.getCreatedOn()))
+                .build();
+    }
+
+    public static CommentInEventDto toCommentInEventDto(Comment comment) {
+        return CommentInEventDto.builder()
+                .userEmail(comment.getUser().getEmail())
+                .text(comment.getText())
+                .createdOn(DateFormatter.formatDate(comment.getCreatedOn()))
+                .build();
+    }
+
+    public static List<CommentInEventDto> toCommentInEventListDto(List<Comment> comments) {
+        return comments.stream()
+                .map(EventMapper::toCommentInEventDto)
+                .collect(Collectors.toList());
+    }
+
+    public static EventWithCommentsDto toEventWithCommentsDto(Event event,List<Comment> comments) {
+        return EventWithCommentsDto.builder()
+                .id(event.getId())
+                .annotation(event.getAnnotation())
+                .category(CategoryMapper.toDto(event.getCategory()))
+                .confirmedRequests(event.getConfirmedRequests())
+                .eventDate(event.getEventDate().format(DEFAULT_DATE_FORMATTER))
+                .initiator(UserMapper.toShortDto(event.getInitiator()))
+                .paid(event.getPaid())
+                .title(event.getTitle())
+                .commentsCount(comments.size())
+                .comments(toCommentInEventListDto(comments))
+                .build();
+    }
+
+    public static List<EventWithCommentsDto> toShortDtoWithCommentList(List<Event> eventList,List<Comment> comments) {
+        return eventList.stream()
+                .map(a->toEventWithCommentsDto(a,
+                        comments.stream()
+                        .filter(b->b.getEvent().getId().equals(a.getId()))
+                                .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+    }
+
+
 }

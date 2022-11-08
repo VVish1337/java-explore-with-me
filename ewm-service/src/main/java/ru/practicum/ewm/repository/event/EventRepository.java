@@ -2,10 +2,15 @@ package ru.practicum.ewm.repository.event;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
+import ru.practicum.ewm.dto.event.EventWithCommentsDto;
 import ru.practicum.ewm.model.event.Event;
+
+import java.util.List;
 
 /**
  * Class describing jpa event repository

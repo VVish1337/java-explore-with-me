@@ -52,6 +52,7 @@ public class ErrorHandler {
                 .message(ex.getMessage())
                 .reason(DEFAULT_BAD_REQUEST)
                 .status(HttpURLConnection.HTTP_FORBIDDEN)
+                .timestamp(LocalDateTime.now().format(DEFAULT_DATE_FORMATTER))
                 .build();
     }
 
@@ -69,6 +70,7 @@ public class ErrorHandler {
                 .message(ex.getMessage())
                 .reason(DEFAULT_NOT_FOUND)
                 .status(HttpURLConnection.HTTP_NOT_FOUND)
+                .timestamp(LocalDateTime.now().format(DEFAULT_DATE_FORMATTER))
                 .build();
     }
 
@@ -101,8 +103,8 @@ public class ErrorHandler {
     public ApiError handle(Throwable e) {
         log.warn("Internal server error:" + e.getMessage() + " stacktrace:" + Arrays.toString(e.getStackTrace()));
         return ApiError.builder()
-                .message(DEFAULT_INTERNAL_SERVER_ERROR)
-                .reason("Error occurred")
+                .message(e.getMessage())
+                .reason(DEFAULT_INTERNAL_SERVER_ERROR)
                 .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
                 .timestamp(DateFormatter.formatDate(LocalDateTime.now()))
                 .build();
@@ -120,8 +122,8 @@ public class ErrorHandler {
     public ApiError handle(DataIntegrityViolationException e) {
         log.warn("Internal server error:" + e.getMessage() + " stacktrace:" + Arrays.toString(e.getStackTrace()));
         return ApiError.builder()
-                .message(DEFAULT_CONFLICT)
-                .reason("Error occurred")
+                .message(e.getMessage())
+                .reason(DEFAULT_CONFLICT)
                 .status(HttpURLConnection.HTTP_CONFLICT)
                 .timestamp(DateFormatter.formatDate(LocalDateTime.now()))
                 .build();

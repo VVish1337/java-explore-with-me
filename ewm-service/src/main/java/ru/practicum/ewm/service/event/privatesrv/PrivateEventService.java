@@ -1,9 +1,6 @@
 package ru.practicum.ewm.service.event.privatesrv;
 
-import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.event.EventShortDto;
-import ru.practicum.ewm.dto.event.NewEventDto;
-import ru.practicum.ewm.dto.event.UpdateEventDto;
+import ru.practicum.ewm.dto.event.*;
 
 import java.util.List;
 
@@ -59,4 +56,10 @@ public interface PrivateEventService {
      * @return
      */
     EventFullDto cancelEventByUserOwner(Long userId, Long eventId);
+
+    CommentDto addCommentToEvent(Long userId, Long eventId, String text);
+
+    CommentDto updateCommentByUserOwner(Long userId, Long eventId, Long comId, String text);
+
+    void deleteCommentByUserOwner(Long userId, Long eventId, Long comId);
 }

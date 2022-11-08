@@ -1,14 +1,10 @@
-package ru.practicum.ewm.controller.event.privatecontroller.privatecontroller;
+package ru.practicum.ewm.controller.event.privatecontroller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.controller.event.privatecontroller.privatecontroller.PrivateEventController;
-import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.event.EventShortDto;
-import ru.practicum.ewm.dto.event.NewEventDto;
-import ru.practicum.ewm.dto.event.UpdateEventDto;
+import ru.practicum.ewm.dto.event.*;
 import ru.practicum.ewm.service.event.privatesrv.PrivateEventService;
 
 import javax.validation.constraints.Min;
@@ -20,6 +16,7 @@ import static ru.practicum.ewm.util.DefaultValues.DEFAULT_SIZE_VALUE;
 
 /**
  * Class describing event controller for Private api.
+ *
  * @author Timur Kiyamov
  * @version 1.0
  */
@@ -38,6 +35,7 @@ public class PrivateEventControllerImpl implements PrivateEventController {
 
     /**
      * Endpoint of controller which add Event by user
+     *
      * @param userId
      * @param dto
      * @return EventFullDto
@@ -51,6 +49,7 @@ public class PrivateEventControllerImpl implements PrivateEventController {
 
     /**
      * Endpoint of controller which get Events by user owner
+     *
      * @param userId
      * @param from
      * @param size
@@ -68,6 +67,7 @@ public class PrivateEventControllerImpl implements PrivateEventController {
 
     /**
      * Endpoint of controller which update Events by user owner
+     *
      * @param userId
      * @param dto
      * @return EventFullDto
@@ -81,6 +81,7 @@ public class PrivateEventControllerImpl implements PrivateEventController {
 
     /**
      * Endpoint of controller which get event by id by user owner
+     *
      * @param userId
      * @param eventId
      * @return EventFullDto
@@ -94,6 +95,7 @@ public class PrivateEventControllerImpl implements PrivateEventController {
 
     /**
      * Endpoint of controller which cancel request to publish by user owner
+     *
      * @param userId
      * @param eventId
      * @return EventFullDto
@@ -104,4 +106,27 @@ public class PrivateEventControllerImpl implements PrivateEventController {
         log.info("cancel event by id:{} and owner id:{}", eventId, userId);
         return service.cancelEventByUserOwner(userId, eventId);
     }
+
+    @Override
+    @PostMapping("{eventId}/comments")
+    public CommentDto addCommentToEvent(@PathVariable Long userId, @PathVariable Long eventId,
+                                        @RequestParam String text) {
+        log.info("Add comment to event event id:{},user id:{},text:{}", eventId, userId, text);
+        return service.addCommentToEvent(userId, eventId, text);
+    }
+
+    @Override
+    @PatchMapping("/{eventId}/comments/{comId}")
+    public CommentDto updateCommentByUserOwner(@PathVariable Long userId, @PathVariable Long eventId,
+                                               @PathVariable Long comId,@RequestParam String text) {
+        return service.updateCommentByUserOwner(userId,eventId,comId,text);
+    }
+
+    @Override
+    @DeleteMapping("/{eventId}/comments/{comId}/delete")
+    public void deleteCommentByUserOwner(@PathVariable Long userId, @PathVariable Long eventId,
+                                         @PathVariable Long comId) {
+        service.deleteCommentByUserOwner(userId, eventId, comId);
+    }
+
 }

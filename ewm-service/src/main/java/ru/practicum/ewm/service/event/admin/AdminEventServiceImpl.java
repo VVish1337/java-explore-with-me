@@ -5,16 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.event.AdminUpdateEventDto;
+import ru.practicum.ewm.dto.event.CommentDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.exception.ForbiddenException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.event.EventMapper;
 import ru.practicum.ewm.model.category.Category;
-import ru.practicum.ewm.model.event.Event;
-import ru.practicum.ewm.model.event.EventFilterParams;
-import ru.practicum.ewm.model.event.PublicationState;
-import ru.practicum.ewm.model.event.QEvent;
+import ru.practicum.ewm.model.event.*;
 import ru.practicum.ewm.repository.category.CategoryRepository;
+import ru.practicum.ewm.repository.event.CommentRepository;
 import ru.practicum.ewm.repository.event.EventRepository;
 import ru.practicum.ewm.util.DateFormatter;
 import ru.practicum.ewm.util.PaginationUtil;
@@ -36,11 +35,13 @@ import static ru.practicum.ewm.util.DefaultValues.*;
 public class AdminEventServiceImpl implements AdminEventService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public AdminEventServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository) {
+    public AdminEventServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository, CommentRepository commentRepository) {
         this.eventRepository = eventRepository;
         this.categoryRepository = categoryRepository;
+        this.commentRepository = commentRepository;
     }
 
     /**
@@ -149,6 +150,18 @@ public class AdminEventServiceImpl implements AdminEventService {
                 .buildAnd();
         return EventMapper.toFullDtoList(eventRepository.findAll(predicate,
                 PaginationUtil.getPageable(from, size, Sort.unsorted())).toList());
+    }
+
+    @Override
+    public void deleteCommentByAdmin(Long eventId, Long comId) {
+        Event event = getEvent(eventId);
+        Comment comment = commentRepository.findById(comId)
+                .orElseThrow(()->new NotFoundException("Comment not found id:"+comId));
+        if(!comment.getEvent().getId().equals(eventId)){
+            throw new ForbiddenException("Wrong eventId comment eventId:"+comment.getEvent().getId()
+                    +" eventId:"+eventId);
+        }
+        commentRepository.deleteById(comId);
     }
 
     /**

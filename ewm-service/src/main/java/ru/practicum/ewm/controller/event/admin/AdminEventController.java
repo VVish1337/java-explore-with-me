@@ -1,7 +1,8 @@
-package ru.practicum.ewm.controller.event.privatecontroller.admin;
+package ru.practicum.ewm.controller.event.admin;
 
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.event.AdminUpdateEventDto;
+import ru.practicum.ewm.dto.event.CommentDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
 
 import java.util.List;
@@ -65,4 +66,7 @@ public interface AdminEventController {
      */
     @PatchMapping("/{eventId}/reject")
     EventFullDto rejectEvent(@PathVariable Long eventId);
+
+    @DeleteMapping("{eventId}/comments/{comId}")
+    void deleteCommentByAdmin(@PathVariable Long eventId, @PathVariable Long comId);
 }

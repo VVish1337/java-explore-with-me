@@ -6,18 +6,12 @@ import ru.practicum.ewm.dto.user.UserShortDto;
 
 import java.util.List;
 
-/**
- * Class which describes event short information dto
- *
- * @author Timur Kiyamov
- * @version 1.0
- */
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventShortDto {
+public class EventWithCommentsDto {
     private Long id;
     private String annotation;
     private CategoryDto category;
@@ -26,6 +20,6 @@ public class EventShortDto {
     private UserShortDto initiator;
     private Boolean paid;
     private String title;
-    private Long views;
+    private Integer commentsCount;
     private List<CommentInEventDto> comments;
 }

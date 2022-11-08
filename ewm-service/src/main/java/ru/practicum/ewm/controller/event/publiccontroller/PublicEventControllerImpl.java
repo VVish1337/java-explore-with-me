@@ -1,9 +1,11 @@
 package ru.practicum.ewm.controller.event.publiccontroller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
+import ru.practicum.ewm.dto.event.EventWithCommentsDto;
 import ru.practicum.ewm.service.event.publicsrv.PublicEventService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import java.util.List;
  * @author Timur Kiyamov
  * @version 1.0
  */
+@Slf4j
 @RestController
 @RequestMapping("/events")
 public class PublicEventControllerImpl implements PublicEventController {
@@ -67,5 +70,19 @@ public class PublicEventControllerImpl implements PublicEventController {
                                                  @RequestParam Integer size,
                                                  HttpServletRequest request) {
         return service.getFilteredEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
+    }
+
+    @Override
+    @GetMapping("{eventId}/comments")
+    public EventWithCommentsDto getEventWithComments(@PathVariable Long eventId) {
+        log.info("Get event with comments event ID:{}",eventId);
+        return service.getEventWithComments(eventId);
+    }
+
+    @Override
+    @GetMapping("/comments")
+    public List<EventWithCommentsDto> getEventWithCommentsList(@RequestParam(defaultValue = "asc") String sort) {
+        log.info("Get event with comments list sort:{}",sort);
+        return service.getEventWithCommentsList(sort);
     }
 }

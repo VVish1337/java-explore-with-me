@@ -12,12 +12,11 @@ import ru.practicum.ewm.client.EventClient;
 import ru.practicum.ewm.dto.HitDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
+import ru.practicum.ewm.dto.event.EventWithCommentsDto;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.event.EventMapper;
-import ru.practicum.ewm.model.event.Event;
-import ru.practicum.ewm.model.event.EventFilterParams;
-import ru.practicum.ewm.model.event.PublicationState;
-import ru.practicum.ewm.model.event.QEvent;
+import ru.practicum.ewm.model.event.*;
+import ru.practicum.ewm.repository.event.CommentRepository;
 import ru.practicum.ewm.repository.event.EventRepository;
 import ru.practicum.ewm.util.DateFormatter;
 import ru.practicum.ewm.util.PaginationUtil;
@@ -28,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.practicum.ewm.util.DefaultValues.EVENT_NOT_FOUND;
 
@@ -42,10 +42,12 @@ import static ru.practicum.ewm.util.DefaultValues.EVENT_NOT_FOUND;
 @Transactional
 public class PublicEventServiceImpl implements PublicEventService {
     private final EventRepository eventRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public PublicEventServiceImpl(EventRepository eventRepository) {
+    public PublicEventServiceImpl(EventRepository eventRepository, CommentRepository commentRepository) {
         this.eventRepository = eventRepository;
+        this.commentRepository = commentRepository;
     }
 
     /**
@@ -95,6 +97,23 @@ public class PublicEventServiceImpl implements PublicEventService {
                 .findAll(predicate, PaginationUtil.getPageable(from, size, Sort.by(sort))).toList();
         addViewToEventList(eventList);
         return EventMapper.toShortDtoList(eventList);
+    }
+
+    @Override
+    public EventWithCommentsDto getEventWithComments(Long eventId) {
+        Event event = getEvent(eventId);
+        List<Comment> commentList = commentRepository.findAllByEventId(eventId);
+        return EventMapper.toEventWithCommentsDto(event,commentList);
+    }
+
+    @Override
+    public List<EventWithCommentsDto> getEventWithCommentsList(String sort) {
+        List<Event> eventList = eventRepository.findAll();
+        List<Long> ids = eventList.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+        List<Comment> comments = commentRepository.findByEventIds(ids,Sort.by("createdOn").descending());
+        return EventMapper.toShortDtoWithCommentList(eventList,comments);
     }
 
     /**
@@ -165,5 +184,10 @@ public class PublicEventServiceImpl implements PublicEventService {
     private void addViewToEvent(Event event) {
         event.setViews(event.getViews() + 1);
         eventRepository.save(event);
+    }
+
+    private Event getEvent(Long eventId){
+        return eventRepository.findById(eventId)
+                .orElseThrow(()->new NotFoundException(EVENT_NOT_FOUND));
     }
 }

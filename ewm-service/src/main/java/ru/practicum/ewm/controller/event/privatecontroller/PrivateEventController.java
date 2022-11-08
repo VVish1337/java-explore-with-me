@@ -1,9 +1,10 @@
-package ru.practicum.ewm.controller.event.privatecontroller.privatecontroller;
+package ru.practicum.ewm.controller.event.privatecontroller;
 
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
+import ru.practicum.ewm.dto.event.CommentDto;
 import ru.practicum.ewm.dto.event.UpdateEventDto;
 
 import javax.validation.constraints.Min;
@@ -70,4 +71,16 @@ public interface PrivateEventController {
      */
     @PatchMapping("{eventId}")
     EventFullDto cancelEventByUserOwner(@PathVariable Long userId, @PathVariable Long eventId);
+
+    @PostMapping("{eventId}/comments")
+    CommentDto addCommentToEvent(@PathVariable Long userId, @PathVariable Long eventId,
+                                 @RequestParam String text);
+
+    @PatchMapping("{eventId}/comments/{comId}")
+    CommentDto updateCommentByUserOwner(@PathVariable Long userId, @PathVariable Long eventId,
+                                        @PathVariable Long comId, @RequestParam String text);
+
+    @DeleteMapping("/{eventId}/comments/{comId}/delete")
+    void deleteCommentByUserOwner(@PathVariable Long userId, @PathVariable Long eventId,
+                                  @PathVariable Long comId);
 }
