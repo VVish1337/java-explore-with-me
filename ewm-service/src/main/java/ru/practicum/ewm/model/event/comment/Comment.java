@@ -1,11 +1,18 @@
-package ru.practicum.ewm.model.event;
+package ru.practicum.ewm.model.event.comment;
 
 import lombok.*;
+import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.model.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Class describing comment
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Getter
 @Setter
 @Entity

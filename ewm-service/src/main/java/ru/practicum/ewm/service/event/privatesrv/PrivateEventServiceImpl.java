@@ -4,16 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.dto.event.*;
+import ru.practicum.ewm.dto.event.EventFullDto;
+import ru.practicum.ewm.dto.event.EventShortDto;
+import ru.practicum.ewm.dto.event.NewEventDto;
+import ru.practicum.ewm.dto.event.UpdateEventDto;
+import ru.practicum.ewm.dto.event.comment.CommentDto;
+import ru.practicum.ewm.dto.event.comment.CommentReportDto;
 import ru.practicum.ewm.exception.ForbiddenException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.event.EventMapper;
 import ru.practicum.ewm.model.category.Category;
-import ru.practicum.ewm.model.event.Comment;
 import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.model.event.PublicationState;
+import ru.practicum.ewm.model.event.comment.Comment;
+import ru.practicum.ewm.model.event.comment.ReportName;
 import ru.practicum.ewm.model.user.User;
 import ru.practicum.ewm.repository.category.CategoryRepository;
+import ru.practicum.ewm.repository.event.CommentReportRepository;
 import ru.practicum.ewm.repository.event.CommentRepository;
 import ru.practicum.ewm.repository.event.EventRepository;
 import ru.practicum.ewm.repository.user.UserRepository;
@@ -38,14 +45,17 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
+    private final CommentReportRepository commentReportRepository;
 
     @Autowired
     public PrivateEventServiceImpl(EventRepository eventRepository, UserRepository userRepository,
-                                   CategoryRepository categoryRepository, CommentRepository commentRepository) {
+                                   CategoryRepository categoryRepository, CommentRepository commentRepository,
+                                   CommentReportRepository commentReportRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.commentRepository = commentRepository;
+        this.commentReportRepository = commentReportRepository;
     }
 
     /**
@@ -160,6 +170,14 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         return EventMapper.toFullDto(eventRepository.save(event));
     }
 
+    /**
+     * Method of service which add Comment to Event by user
+     *
+     * @param userId  id of user (owner of comment)
+     * @param eventId id of event
+     * @param text    text which will be add as commment
+     * @return CommentDto
+     */
     @Override
     public CommentDto addCommentToEvent(Long userId, Long eventId, String text) {
         if (text.isEmpty() || text.isBlank()) {
@@ -170,37 +188,78 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         return EventMapper.toCommentDto(commentRepository.save(EventMapper.toCommentModel(user, event, text)));
     }
 
+    /**
+     * Method of service which update added comment by comment user owner
+     *
+     * @param userId  id of user (owner of comment)
+     * @param eventId id of event
+     * @param comId   id of comment
+     * @param text    text which will update added text in comment
+     * @return CommentDto
+     */
     @Override
     public CommentDto updateCommentByUserOwner(Long userId, Long eventId, Long comId, String text) {
         if (text.isEmpty() || text.isBlank()) {
             throw new NotFoundException(DEFAULT_TEXT_EMPTY);
         }
-        Comment comment = commentRepository.findById(comId)
-                .orElseThrow(()->new NotFoundException("Comment not found id:"+comId));
+        Comment comment = getComment(comId);
         User user = checkUserExists(userId);
-        if(!comment.getUser().getId().equals(userId)){
+        if (!comment.getUser().getId().equals(userId)) {
             throw new ForbiddenException("User not owner of comment");
         }
         Event event = getEvent(eventId);
-        if(!comment.getEvent().getId().equals(eventId)){
+        if (!comment.getEvent().getId().equals(eventId)) {
             throw new ForbiddenException("This comment not in this event");
         }
         return EventMapper.toCommentDto(comment);
     }
 
+    /**
+     * Method of service which delete added comment by comment user owner
+     *
+     * @param userId  id of user (owner of comment)
+     * @param eventId id of event
+     * @param comId
+     */
     @Override
     public void deleteCommentByUserOwner(Long userId, Long eventId, Long comId) {
-        Comment comment = commentRepository.findById(comId)
-                .orElseThrow(()->new NotFoundException("Comment not found id:"+comId));
+        Comment comment = getComment(comId);
         User user = checkUserExists(userId);
-        if(!comment.getUser().getId().equals(userId)){
+        if (!comment.getUser().getId().equals(userId)) {
             throw new ForbiddenException("User not owner of comment");
         }
         Event event = getEvent(eventId);
-        if(!comment.getEvent().getId().equals(eventId)){
+        if (!comment.getEvent().getId().equals(eventId)) {
             throw new ForbiddenException("This comment not in this event");
         }
         commentRepository.deleteById(comId);
+    }
+
+    /**
+     * Method of service which add report to bad comment
+     *
+     * @param userId     id of user (not owner of comment)
+     * @param eventId    id of event
+     * @param comId      id of comment
+     * @param reportName category of report
+     * @return CommentReportDto
+     */
+    @Override
+    public CommentReportDto addReportToComment(Long userId, Long eventId, Long comId, String reportName) {
+        if (reportName.isEmpty() || reportName.isBlank()) {
+            throw new NotFoundException(DEFAULT_REPORT_NAME_EMPTY);
+        }
+        Comment comment = getComment(comId);
+        User reporter = checkUserExists(userId);
+        if (comment.getUser().getId().equals(userId)) {
+            throw new ForbiddenException("User owner of comment");
+        }
+        Event event = getEvent(eventId);
+        if (!comment.getEvent().getId().equals(eventId)) {
+            throw new ForbiddenException("This comment not in this event");
+        }
+        return EventMapper.toCommentReportDto(commentReportRepository
+                .save(EventMapper.toCommentReport(comment, parseReportName(reportName), reporter)));
     }
 
     /**
@@ -234,5 +293,26 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND + categoryId));
+    }
+
+    /**
+     * Private method of service which chech Comment existence
+     *
+     * @param comId
+     * @return Comment
+     */
+    private Comment getComment(Long comId) {
+        return commentRepository.findById(comId)
+                .orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOUND + comId));
+    }
+
+    /**
+     * Private method of service which parse string of category report to enum type
+     *
+     * @param reportName
+     * @return
+     */
+    private ReportName parseReportName(String reportName) {
+        return ReportName.valueOf(reportName);
     }
 }

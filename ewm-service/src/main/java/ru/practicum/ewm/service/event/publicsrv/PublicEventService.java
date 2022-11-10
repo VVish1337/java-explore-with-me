@@ -43,7 +43,19 @@ public interface PublicEventService {
                                           String rangeEnd, Boolean onlyAvailable,
                                           String sort, Integer from, Integer size, HttpServletRequest request);
 
+    /**
+     * Method of service which get Event with comments
+     *
+     * @param eventId id of event
+     * @return EventWithCommentsDto
+     */
     EventWithCommentsDto getEventWithComments(Long eventId);
 
+    /**
+     * Method of service which get Event with comments list
+     *
+     * @param sort param which describes how to sort ascending,descending
+     * @return List of EventWithCommentsDto
+     */
     List<EventWithCommentsDto> getEventWithCommentsList(String sort);
 }

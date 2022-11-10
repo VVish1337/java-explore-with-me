@@ -1,7 +1,13 @@
-package ru.practicum.ewm.dto.event;
+package ru.practicum.ewm.dto.event.comment;
 
 import lombok.*;
 
+/**
+ * Class which describes comment dto
+ *
+ * @author Timur Kiyamov
+ * @version 1.0
+ */
 @Getter
 @Setter
 @Builder

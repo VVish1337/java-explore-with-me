@@ -2,8 +2,8 @@ package ru.practicum.ewm.controller.event.admin;
 
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.event.AdminUpdateEventDto;
-import ru.practicum.ewm.dto.event.CommentDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
+import ru.practicum.ewm.dto.event.comment.CommentReportDto;
 
 import java.util.List;
 
@@ -67,6 +67,50 @@ public interface AdminEventController {
     @PatchMapping("/{eventId}/reject")
     EventFullDto rejectEvent(@PathVariable Long eventId);
 
+    /**
+     * Endpoint of controller which delete comment by administrator or moderator
+     *
+     * @param eventId id of event
+     * @param comId   id of comment
+     */
     @DeleteMapping("{eventId}/comments/{comId}")
     void deleteCommentByAdmin(@PathVariable Long eventId, @PathVariable Long comId);
+
+    /**
+     * Endpoint of controller which get all reported comments
+     *
+     * @return List of CommentReportDto
+     */
+    @GetMapping("comments/reports")
+    List<CommentReportDto> getReportedComments();
+
+    /**
+     * Endpoint of controller which get all filtered reported comments
+     *
+     * @param start    start time
+     * @param end      end time
+     * @param category category of report (check ReportName)
+     * @return List of CommentReportDto
+     */
+    @GetMapping("comments/reports/filter")
+    List<CommentReportDto> getFilteredReportedComments(@RequestParam String start,
+                                                       @RequestParam String end,
+                                                       @RequestParam(defaultValue = "ALL") String category);
+
+    /**
+     * Endpoint of controller which get all reported comments by report owner
+     *
+     * @param userId user id (report owner)
+     * @return List of CommentReportDto
+     */
+    @GetMapping("/comments/reports/owner")
+    List<CommentReportDto> getAllReportCommentsOwner(@RequestParam Long userId);
+
+    /**
+     * Endpoint of controller which delete report by id
+     *
+     * @param repId report id
+     */
+    @DeleteMapping("/comments/reports/{repId}")
+    void deleteReportById(@PathVariable Long repId);
 }

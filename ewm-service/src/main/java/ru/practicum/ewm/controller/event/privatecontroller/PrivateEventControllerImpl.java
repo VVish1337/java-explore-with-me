@@ -4,7 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.event.*;
+import ru.practicum.ewm.dto.event.EventFullDto;
+import ru.practicum.ewm.dto.event.EventShortDto;
+import ru.practicum.ewm.dto.event.NewEventDto;
+import ru.practicum.ewm.dto.event.UpdateEventDto;
+import ru.practicum.ewm.dto.event.comment.CommentDto;
+import ru.practicum.ewm.dto.event.comment.CommentReportDto;
 import ru.practicum.ewm.service.event.privatesrv.PrivateEventService;
 
 import javax.validation.constraints.Min;
@@ -107,6 +112,14 @@ public class PrivateEventControllerImpl implements PrivateEventController {
         return service.cancelEventByUserOwner(userId, eventId);
     }
 
+    /**
+     * Endpoint of controller which add comment event
+     *
+     * @param userId  id of user
+     * @param eventId id of event
+     * @param text    text of comment
+     * @return CommentDto
+     */
     @Override
     @PostMapping("{eventId}/comments")
     public CommentDto addCommentToEvent(@PathVariable Long userId, @PathVariable Long eventId,
@@ -115,13 +128,29 @@ public class PrivateEventControllerImpl implements PrivateEventController {
         return service.addCommentToEvent(userId, eventId, text);
     }
 
+    /**
+     * Endpoint of controller which update added comment
+     *
+     * @param userId  id of user
+     * @param eventId id of event
+     * @param comId   id of comment
+     * @param text    text of comment which will update old text
+     * @return CommentDto
+     */
     @Override
     @PatchMapping("/{eventId}/comments/{comId}")
     public CommentDto updateCommentByUserOwner(@PathVariable Long userId, @PathVariable Long eventId,
-                                               @PathVariable Long comId,@RequestParam String text) {
-        return service.updateCommentByUserOwner(userId,eventId,comId,text);
+                                               @PathVariable Long comId, @RequestParam String text) {
+        return service.updateCommentByUserOwner(userId, eventId, comId, text);
     }
 
+    /**
+     * Endpoint of controller which delete comment by owner
+     *
+     * @param userId  id of user (owner of comment)
+     * @param eventId id of event
+     * @param comId   id of comment
+     */
     @Override
     @DeleteMapping("/{eventId}/comments/{comId}/delete")
     public void deleteCommentByUserOwner(@PathVariable Long userId, @PathVariable Long eventId,
@@ -129,4 +158,19 @@ public class PrivateEventControllerImpl implements PrivateEventController {
         service.deleteCommentByUserOwner(userId, eventId, comId);
     }
 
+    /**
+     * Endpoint of controller which add report to bad comment
+     *
+     * @param userId   id of user
+     * @param eventId  id of event
+     * @param comId    id of comment
+     * @param category category of report (check ReportName)
+     * @return CommentReportDto
+     */
+    @Override
+    @PostMapping("/{eventId}/comments/{comId}/report")
+    public CommentReportDto addReportToComment(@PathVariable Long userId, @PathVariable Long eventId,
+                                               @PathVariable Long comId, @RequestParam String category) {
+        return service.addReportToComment(userId, eventId, comId, category);
+    }
 }

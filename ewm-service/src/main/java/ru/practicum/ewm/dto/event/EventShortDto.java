@@ -4,8 +4,6 @@ import lombok.*;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.dto.user.UserShortDto;
 
-import java.util.List;
-
 /**
  * Class which describes event short information dto
  *
@@ -27,5 +25,4 @@ public class EventShortDto {
     private Boolean paid;
     private String title;
     private Long views;
-    private List<CommentInEventDto> comments;
 }

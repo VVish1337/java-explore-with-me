@@ -72,17 +72,29 @@ public class PublicEventControllerImpl implements PublicEventController {
         return service.getFilteredEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
     }
 
+    /**
+     * Endpoint of controller which get Event with comments
+     *
+     * @param eventId id of event
+     * @return EventWithCommentsDto
+     */
     @Override
     @GetMapping("{eventId}/comments")
     public EventWithCommentsDto getEventWithComments(@PathVariable Long eventId) {
-        log.info("Get event with comments event ID:{}",eventId);
+        log.info("Get event with comments event ID:{}", eventId);
         return service.getEventWithComments(eventId);
     }
 
+    /**
+     * Endpoint of controller which get Event with comments list
+     *
+     * @param sort param which describes how to sort ascending,descending
+     * @return List of EventWithCommentsDto
+     */
     @Override
     @GetMapping("/comments")
     public List<EventWithCommentsDto> getEventWithCommentsList(@RequestParam(defaultValue = "asc") String sort) {
-        log.info("Get event with comments list sort:{}",sort);
+        log.info("Get event with comments list sort:{}", sort);
         return service.getEventWithCommentsList(sort);
     }
 }

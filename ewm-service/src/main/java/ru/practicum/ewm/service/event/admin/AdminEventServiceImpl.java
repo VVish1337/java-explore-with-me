@@ -5,16 +5,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.event.AdminUpdateEventDto;
-import ru.practicum.ewm.dto.event.CommentDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
+import ru.practicum.ewm.dto.event.comment.CommentReportDto;
 import ru.practicum.ewm.exception.ForbiddenException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.event.EventMapper;
 import ru.practicum.ewm.model.category.Category;
-import ru.practicum.ewm.model.event.*;
+import ru.practicum.ewm.model.event.Event;
+import ru.practicum.ewm.model.event.EventFilterParams;
+import ru.practicum.ewm.model.event.PublicationState;
+import ru.practicum.ewm.model.event.QEvent;
+import ru.practicum.ewm.model.event.comment.Comment;
+import ru.practicum.ewm.model.event.comment.ReportName;
+import ru.practicum.ewm.model.user.User;
 import ru.practicum.ewm.repository.category.CategoryRepository;
+import ru.practicum.ewm.repository.event.CommentReportRepository;
 import ru.practicum.ewm.repository.event.CommentRepository;
 import ru.practicum.ewm.repository.event.EventRepository;
+import ru.practicum.ewm.repository.user.UserRepository;
 import ru.practicum.ewm.util.DateFormatter;
 import ru.practicum.ewm.util.PaginationUtil;
 import ru.practicum.ewm.util.QPredicates;
@@ -36,12 +44,16 @@ public class AdminEventServiceImpl implements AdminEventService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
+    private final CommentReportRepository commentReportRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public AdminEventServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository, CommentRepository commentRepository) {
+    public AdminEventServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository, CommentRepository commentRepository, CommentReportRepository commentReportRepository, UserRepository userRepository) {
         this.eventRepository = eventRepository;
         this.categoryRepository = categoryRepository;
         this.commentRepository = commentRepository;
+        this.commentReportRepository = commentReportRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -152,16 +164,85 @@ public class AdminEventServiceImpl implements AdminEventService {
                 PaginationUtil.getPageable(from, size, Sort.unsorted())).toList());
     }
 
+    /**
+     * Method of service which delete comment by Administrator,Moderator
+     *
+     * @param eventId id of Event
+     * @param comId   id of comment
+     */
     @Override
     public void deleteCommentByAdmin(Long eventId, Long comId) {
-        Event event = getEvent(eventId);
+        getEvent(eventId);
         Comment comment = commentRepository.findById(comId)
-                .orElseThrow(()->new NotFoundException("Comment not found id:"+comId));
-        if(!comment.getEvent().getId().equals(eventId)){
-            throw new ForbiddenException("Wrong eventId comment eventId:"+comment.getEvent().getId()
-                    +" eventId:"+eventId);
+                .orElseThrow(() -> new NotFoundException("Comment not found id:" + comId));
+        if (!comment.getEvent().getId().equals(eventId)) {
+            throw new ForbiddenException("Wrong eventId comment eventId:" + comment.getEvent().getId()
+                    + " eventId:" + eventId);
         }
         commentRepository.deleteById(comId);
+    }
+
+    /**
+     * Method of service which get all reported comments
+     *
+     * @return List of CommentReportDto
+     */
+    @Override
+    public List<CommentReportDto> getReportedComments() {
+        return EventMapper.toCommentReportDtoList(commentReportRepository.findAll());
+    }
+
+    /**
+     * Method of service which get filtered reported comments
+     *
+     * @param start    start time
+     * @param end      end time
+     * @param category category of report (check enum ReportName) default value ALL
+     * @return
+     */
+    @Override
+    public List<CommentReportDto> getFilteredReportedComments(String start, String end, String category) {
+        LocalDateTime startTime;
+        LocalDateTime endTime;
+        if (start.isBlank() || start.isBlank()) {
+            startTime = LocalDateTime.now().minusYears(1);
+        } else {
+            startTime = DateFormatter.stringToDate(start);
+        }
+        if (end.isBlank() || end.isBlank()) {
+            endTime = LocalDateTime.now();
+        } else {
+            endTime = DateFormatter.stringToDate(end);
+        }
+        if (category.equals("ALL")) {
+            return EventMapper.toCommentReportDtoList(commentReportRepository
+                    .findAllFilteredWithoutCategory(startTime, endTime));
+        } else {
+            return EventMapper.toCommentReportDtoList(commentReportRepository
+                    .findAllFiltered(startTime, endTime, ReportName.valueOf(category)));
+        }
+    }
+
+    /**
+     * Method of service which get all reported comments by reporter
+     *
+     * @param userId user id (owner of report)
+     * @return List of CommentReportDto
+     */
+    @Override
+    public List<CommentReportDto> getAllReportCommentsOwner(Long userId) {
+        checkUserExists(userId);
+        return EventMapper.toCommentReportDtoList(commentReportRepository.findAllByReporterId(userId));
+    }
+
+    /**
+     * Method of service which delete reported comments by id
+     *
+     * @param repId
+     */
+    @Override
+    public void deleteReportById(Long repId) {
+        commentReportRepository.deleteById(repId);
     }
 
     /**
@@ -173,5 +254,16 @@ public class AdminEventServiceImpl implements AdminEventService {
     private Event getEvent(Long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event not found id:" + eventId));
+    }
+
+    /**
+     * Private method of service which check User existence
+     *
+     * @param userId
+     * @return User
+     */
+    private User checkUserExists(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + userId));
     }
 }

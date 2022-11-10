@@ -57,9 +57,19 @@ public interface PublicEventController {
                                           @RequestParam Integer size,
                                           HttpServletRequest request);
 
+    /**
+     * Endpoint of controller which get Event with comments
+     * @param eventId id of event
+     * @return EventWithCommentsDto
+     */
     @GetMapping("{eventId}/comments")
     EventWithCommentsDto getEventWithComments(@PathVariable Long eventId);
 
+    /**
+     * Endpoint of controller which get Event with comments list
+     * @param sort param which describes how to sort ascending,descending
+     * @return List of EventWithCommentsDto
+     */
     @GetMapping("/comments")
-    List<EventWithCommentsDto> getEventWithCommentsList(@RequestParam String sort);
+    List<EventWithCommentsDto> getEventWithCommentsList(@RequestParam(defaultValue = "asc") String sort);
 }
