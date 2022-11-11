@@ -49,7 +49,7 @@ public class EventRequestServiceImpl implements EventRequestService {
      */
     @Override
     public ParticipationRequestDto addRequestToEventFromUser(Long userId, Long eventId) {
-        if(eventId ==null) {
+        if (eventId == null) {
             throw new IllegalArgumentException("Event id is required");
         }
         checkUserExist(userId);
