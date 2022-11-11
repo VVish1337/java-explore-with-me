@@ -91,9 +91,6 @@ public class PublicEventServiceImpl implements PublicEventService {
                                                  Boolean paid, String rangeStart,
                                                  String rangeEnd, Boolean onlyAvailable,
                                                  String sort, Integer from, Integer size, HttpServletRequest request) {
-        if (categories == null) {
-            return new ArrayList<>();
-        }
         EventFilterParams params = new EventFilterParams(text, categories,
                 paid, rangeStart, rangeEnd, onlyAvailable, from, size);
         Predicate predicate = getPredicates(params);

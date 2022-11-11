@@ -28,7 +28,6 @@ import ru.practicum.ewm.util.PaginationUtil;
 import ru.practicum.ewm.util.QPredicates;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -152,9 +151,6 @@ public class AdminEventServiceImpl implements AdminEventService {
     public List<EventFullDto> getFilteredEvents(List<Long> users, List<String> states,
                                                 List<Long> categories, String rangeStart,
                                                 String rangeEnd, Integer from, Integer size) {
-        if (users == null || states == null || categories == null) {
-            return new ArrayList<>();
-        }
         EventFilterParams params = new EventFilterParams(
                 users, states, categories, rangeStart, rangeEnd, from, size);
         Predicate predicate = QPredicates.builder()

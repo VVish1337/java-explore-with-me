@@ -11,6 +11,7 @@ import static ru.practicum.ewm.util.DefaultValues.DEFAULT_DATE_FORMATTER;
 
 /**
  * Filter class for events
+ *
  * @author Timur Kiyamov
  * @version 1.0
  */
@@ -54,7 +55,9 @@ public class EventFilterParams {
                              String rangeEnd, Integer from, Integer size) {
 
         this.users = users;
-        this.states = EventMapper.toState(states);
+        if (states != null) {
+            this.states = EventMapper.toState(states);
+        }
         this.categories = categories;
         if (rangeStart != null) {
             this.rangeStart = LocalDateTime.parse(rangeStart, DEFAULT_DATE_FORMATTER);
