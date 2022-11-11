@@ -2,10 +2,13 @@ package ru.practicum.ewm.controller.compilation.admin;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.compilation.CompilationDto;
 import ru.practicum.ewm.dto.compilation.NewCompilationDto;
 import ru.practicum.ewm.service.compilation.admin.AdminCompilationService;
+
+import javax.validation.Valid;
 
 /**
  * Class describing compilation controller for Admin api.
@@ -16,6 +19,7 @@ import ru.practicum.ewm.service.compilation.admin.AdminCompilationService;
 
 @Slf4j
 @RestController
+@Validated
 @RequestMapping("/admin/compilations")
 public class AdminCompilationControllerImpl implements AdminCompilationController {
     private final AdminCompilationService service;
@@ -34,7 +38,7 @@ public class AdminCompilationControllerImpl implements AdminCompilationControlle
      */
     @Override
     @PostMapping
-    public CompilationDto addCompilation(@RequestBody NewCompilationDto dto) {
+    public CompilationDto addCompilation(@Valid @RequestBody NewCompilationDto dto) {
         log.info("add compilation dto:{}", dto);
         return service.addCompilation(dto);
     }
@@ -46,7 +50,7 @@ public class AdminCompilationControllerImpl implements AdminCompilationControlle
      */
     @Override
     @DeleteMapping("/{compId}")
-    public void deleteCompilation(@PathVariable() Long compId) {
+    public void deleteCompilation(@PathVariable Long compId) {
         log.info("delete compilation id:{}", compId);
         service.deleteCompilation(compId);
     }

@@ -8,6 +8,8 @@ import ru.practicum.ewm.dto.category.PostCategoryDto;
 import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.service.category.admin.AdminCategoryService;
 
+import javax.validation.Valid;
+
 /**
  * Class describing category controller for Admin api.
  *
@@ -35,7 +37,7 @@ public class AdminCategoryControllerImpl implements AdminCategoryController {
      */
     @Override
     @PostMapping
-    public Category addCategory(@RequestBody PostCategoryDto categoryDto) {
+    public Category addCategory(@RequestBody @Valid PostCategoryDto categoryDto) {
         log.info("add category :{}", categoryDto);
         return adminCategoryService.addCategory(categoryDto);
     }
@@ -48,7 +50,7 @@ public class AdminCategoryControllerImpl implements AdminCategoryController {
      */
     @Override
     @PatchMapping
-    public Category updateCategory(@RequestBody PatchCategoryDto categoryDto) {
+    public Category updateCategory(@RequestBody @Valid PatchCategoryDto categoryDto) {
         log.info("add update category :{}", categoryDto);
         return adminCategoryService.updateCategory(categoryDto);
     }

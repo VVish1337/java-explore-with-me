@@ -8,6 +8,7 @@ import ru.practicum.ewm.dto.event.UpdateEventDto;
 import ru.practicum.ewm.dto.event.comment.CommentDto;
 import ru.practicum.ewm.dto.event.comment.CommentReportDto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -33,7 +34,7 @@ public interface PrivateEventController {
      * @return EventFullDto
      */
     @PostMapping
-    EventFullDto addEvent(@PathVariable Long userId, @RequestBody NewEventDto dto);
+    EventFullDto addEvent(@PathVariable Long userId,@Valid @RequestBody NewEventDto dto);
 
     /**
      * Endpoint of controller which get Events by user owner
@@ -57,7 +58,7 @@ public interface PrivateEventController {
      * @return EventFullDto
      */
     @PatchMapping
-    EventFullDto updateEventByUserOwner(@PathVariable Long userId, @RequestBody UpdateEventDto dto);
+    EventFullDto updateEventByUserOwner(@PathVariable Long userId,@Valid @RequestBody UpdateEventDto dto);
 
     /**
      * Endpoint of controller which get event by id by user owner

@@ -10,6 +10,7 @@ import ru.practicum.ewm.dto.user.UserDto;
 import ru.practicum.ewm.model.user.User;
 import ru.practicum.ewm.service.user.AdminUserService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -55,7 +56,7 @@ public class AdminUserControllerImpl implements AdminUserController {
      */
     @Override
     @PostMapping
-    public User addUser(@RequestBody NewUserDto newUser) {
+    public User addUser(@RequestBody @Valid NewUserDto newUser) {
         log.info("Add user dto:{}", newUser);
         return adminUserService.addUser(newUser);
     }

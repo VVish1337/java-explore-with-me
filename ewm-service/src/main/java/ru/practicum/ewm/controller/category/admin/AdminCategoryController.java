@@ -5,6 +5,8 @@ import ru.practicum.ewm.dto.category.PatchCategoryDto;
 import ru.practicum.ewm.dto.category.PostCategoryDto;
 import ru.practicum.ewm.model.category.Category;
 
+import javax.validation.Valid;
+
 /**
  * Interface describing category controller for Admin api.
  *
@@ -22,7 +24,7 @@ public interface AdminCategoryController {
      * @return Category
      */
     @PostMapping
-    Category addCategory(@RequestBody PostCategoryDto categoryDto);
+    Category addCategory(@RequestBody @Valid PostCategoryDto categoryDto);
 
     /**
      * Endpoint of controller which updating category
@@ -31,7 +33,7 @@ public interface AdminCategoryController {
      * @return Category
      */
     @PatchMapping
-    Category updateCategory(@RequestBody PatchCategoryDto categoryDto);
+    Category updateCategory(@RequestBody @Valid PatchCategoryDto categoryDto);
 
     /**
      * Endpoint of controller which delete category

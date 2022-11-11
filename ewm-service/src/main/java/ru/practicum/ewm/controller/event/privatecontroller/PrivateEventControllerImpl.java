@@ -12,6 +12,7 @@ import ru.practicum.ewm.dto.event.comment.CommentDto;
 import ru.practicum.ewm.dto.event.comment.CommentReportDto;
 import ru.practicum.ewm.service.event.privatesrv.PrivateEventService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -47,7 +48,7 @@ public class PrivateEventControllerImpl implements PrivateEventController {
      */
     @Override
     @PostMapping
-    public EventFullDto addEvent(@PathVariable Long userId, @RequestBody NewEventDto dto) {
+    public EventFullDto addEvent(@PathVariable Long userId, @Valid @RequestBody NewEventDto dto) {
         log.info("post event {}, owner id:{}", dto, userId);
         return service.addEvent(userId, dto);
     }

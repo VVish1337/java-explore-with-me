@@ -1,4 +1,4 @@
-package ru.practicum.ewm.controller.request.publiccontroller;
+package ru.practicum.ewm.controller.request.privatecontroller;
 
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
@@ -6,7 +6,7 @@ import ru.practicum.ewm.dto.request.ParticipationRequestDto;
 import java.util.List;
 
 /**
- * Interface describing event request controller for Public api.
+ * Interface describing event request controller for Private api.
  *
  * @author Timur Kiyamov
  * @version 1.0

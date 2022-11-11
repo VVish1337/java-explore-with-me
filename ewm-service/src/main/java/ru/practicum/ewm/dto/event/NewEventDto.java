@@ -1,11 +1,15 @@
 package ru.practicum.ewm.dto.event;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewm.model.event.Location;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * Class which describes new event dto
@@ -18,6 +22,8 @@ import ru.practicum.ewm.model.event.Location;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewEventDto {
+    @NotNull
+    @NotBlank
     @Length(min = 20, max = 2000)
     private String annotation;
     private Long category;

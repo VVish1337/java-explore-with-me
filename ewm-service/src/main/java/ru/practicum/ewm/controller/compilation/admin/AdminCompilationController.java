@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.compilation.CompilationDto;
 import ru.practicum.ewm.dto.compilation.NewCompilationDto;
 
+import javax.validation.Valid;
+
 /**
  * Interface describing compilation controller for Admin api.
  *
@@ -20,7 +22,7 @@ public interface AdminCompilationController {
      * @return CompilationDto
      */
     @PostMapping
-    CompilationDto addCompilation(@RequestBody NewCompilationDto dto);
+    CompilationDto addCompilation(@Valid @RequestBody NewCompilationDto dto);
 
     /**
      * Endpoint of controller which delete compilations

@@ -42,13 +42,13 @@ public class AdminEventControllerImpl implements AdminEventController {
      */
     @Override
     @GetMapping
-    public List<EventFullDto> getFilteredEvents(@RequestParam List<Long> users,
-                                                @RequestParam List<String> states,
-                                                @RequestParam List<Long> categories,
-                                                @RequestParam String rangeStart,
-                                                @RequestParam String rangeEnd,
-                                                @RequestParam Integer from,
-                                                @RequestParam Integer size) {
+    public List<EventFullDto> getFilteredEvents(@RequestParam(required = false) List<Long> users,
+                                                @RequestParam(required = false) List<String> states,
+                                                @RequestParam(required = false) List<Long> categories,
+                                                @RequestParam(required = false) String rangeStart,
+                                                @RequestParam(required = false) String rangeEnd,
+                                                @RequestParam(required = false,defaultValue = "0") Integer from,
+                                                @RequestParam(required = false,defaultValue = "10") Integer size) {
         log.info("get Filtered events ");
         return service.getFilteredEvents(users, states, categories, rangeStart, rangeEnd, from, size);
     }

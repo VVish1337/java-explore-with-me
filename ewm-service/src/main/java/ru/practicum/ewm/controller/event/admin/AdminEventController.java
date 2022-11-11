@@ -5,6 +5,7 @@ import ru.practicum.ewm.dto.event.AdminUpdateEventDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.comment.CommentReportDto;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ public interface AdminEventController {
      */
     @PutMapping("/{eventId}")
     EventFullDto updateEventByAdmin(@PathVariable Long eventId,
-                                    @RequestBody AdminUpdateEventDto dto);
+                                    @Valid @RequestBody AdminUpdateEventDto dto);
 
     /**
      * Endpoint of controller which publish event

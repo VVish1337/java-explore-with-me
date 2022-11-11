@@ -49,6 +49,9 @@ public class EventRequestServiceImpl implements EventRequestService {
      */
     @Override
     public ParticipationRequestDto addRequestToEventFromUser(Long userId, Long eventId) {
+        if(eventId ==null) {
+            throw new IllegalArgumentException("Event id is required");
+        }
         checkUserExist(userId);
         Event event = getEvent(eventId);
         if (event.getInitiator().getId().equals(userId)) {

@@ -59,17 +59,19 @@ public class PublicEventControllerImpl implements PublicEventController {
      */
     @Override
     @GetMapping
-    public List<EventShortDto> getFilteredEvents(@RequestParam String text,
-                                                 @RequestParam List<Long> categories,
-                                                 @RequestParam Boolean paid,
-                                                 @RequestParam String rangeStart,
-                                                 @RequestParam String rangeEnd,
-                                                 @RequestParam Boolean onlyAvailable,
-                                                 @RequestParam(defaultValue = "EVENT_DATE") String sort,
-                                                 @RequestParam Integer from,
-                                                 @RequestParam Integer size,
+    public List<EventShortDto> getFilteredEvents(@RequestParam(required = false) String text,
+                                                 @RequestParam(required = false) List<Long> categories,
+                                                 @RequestParam(required = false) Boolean paid,
+                                                 @RequestParam(required = false) String rangeStart,
+                                                 @RequestParam(required = false) String rangeEnd,
+                                                 @RequestParam(required = false) Boolean onlyAvailable,
+                                                 @RequestParam(required = false, defaultValue = "EVENT_DATE")
+                                                 String sort,
+                                                 @RequestParam(required = false, defaultValue = "0") Integer from,
+                                                 @RequestParam(required = false, defaultValue = "10") Integer size,
                                                  HttpServletRequest request) {
-        return service.getFilteredEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
+        return service.getFilteredEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
+                from, size, request);
     }
 
     /**

@@ -3,6 +3,7 @@ package ru.practicum.ewm.exception.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,6 +12,7 @@ import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.exception.model.ApiError;
 import ru.practicum.ewm.util.DateFormatter;
 
+import javax.validation.ConstraintViolationException;
 import java.net.HttpURLConnection;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -121,6 +123,32 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handle(DataIntegrityViolationException e) {
         log.warn("Internal server error:" + e.getMessage() + " stacktrace:" + Arrays.toString(e.getStackTrace()));
+        return ApiError.builder()
+                .message(e.getMessage())
+                .reason(DEFAULT_CONFLICT)
+                .status(HttpURLConnection.HTTP_CONFLICT)
+                .timestamp(DateFormatter.formatDate(LocalDateTime.now()))
+                .build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handle(MethodArgumentNotValidException e) {
+        log.warn("MethodArgumentNotValidException error:" + e.getMessage() +
+                " stacktrace:" + Arrays.toString(e.getStackTrace()));
+        return ApiError.builder()
+                .message(e.getMessage())
+                .reason(DEFAULT_BAD_REQUEST)
+                .status(HttpURLConnection.HTTP_BAD_REQUEST)
+                .timestamp(DateFormatter.formatDate(LocalDateTime.now()))
+                .build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handle(ConstraintViolationException e) {
+        log.warn("ConstraintViolationException error:" + e.getMessage() +
+                " stacktrace:" + Arrays.toString(e.getStackTrace()));
         return ApiError.builder()
                 .message(e.getMessage())
                 .reason(DEFAULT_CONFLICT)
