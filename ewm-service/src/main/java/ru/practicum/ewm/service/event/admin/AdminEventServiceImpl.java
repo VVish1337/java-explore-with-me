@@ -2,6 +2,7 @@ package ru.practicum.ewm.service.event.admin;
 
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.event.AdminUpdateEventDto;
@@ -30,6 +31,7 @@ import ru.practicum.ewm.util.QPredicates;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static ru.practicum.ewm.util.DefaultValues.*;
 
@@ -202,17 +204,21 @@ public class AdminEventServiceImpl implements AdminEventService {
      */
     @Override
     public List<CommentReportDto> getFilteredReportedComments(String start, String end, String category) {
+        checkCategoryExists(category);
         LocalDateTime startTime;
         LocalDateTime endTime;
-        if (start.isBlank() || start.isBlank()) {
+        if (start.isBlank() || start.isEmpty()) {
             startTime = LocalDateTime.now().minusYears(1);
         } else {
             startTime = DateFormatter.stringToDate(start);
         }
-        if (end.isBlank() || end.isBlank()) {
+        if (end.isBlank() || end.isEmpty()) {
             endTime = LocalDateTime.now();
         } else {
             endTime = DateFormatter.stringToDate(end);
+        }
+        if (startTime.isAfter(endTime)) {
+            throw new DataIntegrityViolationException("Date start time is after end time");
         }
         if (category.equals("ALL")) {
             return EventMapper.toCommentReportDtoList(commentReportRepository
@@ -265,5 +271,13 @@ public class AdminEventServiceImpl implements AdminEventService {
     private User checkUserExists(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + userId));
+    }
+
+    private String checkCategoryExists(String category) {
+        if (Stream.of(ReportName.values()).anyMatch(v -> v.name().equals(category))) {
+            return category;
+        } else {
+            throw new NotFoundException("This is category not found :" + category);
+        }
     }
 }

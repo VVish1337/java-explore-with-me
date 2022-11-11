@@ -10,5 +10,6 @@ public enum ReportName {
     NUDITY,
     VIOLENCE,
     HARASSMENT,
-    SPAM
+    SPAM,
+    ALL
 }
