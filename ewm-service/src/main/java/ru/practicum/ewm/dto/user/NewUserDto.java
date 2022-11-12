@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * Class which describes new user dto
  *
@@ -16,6 +18,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewUserDto {
+    @NotBlank
     private String email;
+    @NotBlank
     private String name;
 }

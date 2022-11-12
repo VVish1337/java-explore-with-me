@@ -2,6 +2,7 @@ package ru.practicum.ewm.service.event.admin;
 
 import ru.practicum.ewm.dto.event.AdminUpdateEventDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
+import ru.practicum.ewm.dto.event.comment.CommentReportDto;
 
 import java.util.List;
 
@@ -53,4 +54,44 @@ public interface AdminEventService {
     List<EventFullDto> getFilteredEvents(List<Long> users, List<String> states,
                                          List<Long> categories, String rangeStart,
                                          String rangeEnd, Integer from, Integer size);
+
+    /**
+     * Method of service which delete comment by Administrator
+     *
+     * @param eventId id of event
+     * @param comId   id of comment
+     */
+    void deleteCommentByAdmin(Long eventId, Long comId);
+
+    /**
+     * Method of service which get all reported comments
+     *
+     * @return List of CommentReportDto
+     */
+    List<CommentReportDto> getReportedComments();
+
+    /**
+     * Method of service which get all filtered reported comments
+     *
+     * @param start    start time
+     * @param end      end time
+     * @param category category of report (check ReportName)
+     * @return List of CommentReportDto
+     */
+    List<CommentReportDto> getFilteredReportedComments(String start, String end, String category);
+
+    /**
+     * Method of service which get all report comments by reporter
+     *
+     * @param userId user id (report owner)
+     * @return List of CommentReportDto
+     */
+    List<CommentReportDto> getAllReportCommentsOwner(Long userId);
+
+    /**
+     * Method of service which delete comment report by id
+     *
+     * @param repId id of comment report
+     */
+    void deleteReportById(Long repId);
 }

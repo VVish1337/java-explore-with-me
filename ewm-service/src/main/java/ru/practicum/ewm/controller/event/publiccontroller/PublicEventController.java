@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
+import ru.practicum.ewm.dto.event.EventWithCommentsDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -55,4 +56,20 @@ public interface PublicEventController {
                                           @RequestParam Integer from,
                                           @RequestParam Integer size,
                                           HttpServletRequest request);
+
+    /**
+     * Endpoint of controller which get Event with comments
+     * @param eventId id of event
+     * @return EventWithCommentsDto
+     */
+    @GetMapping("{eventId}/comments")
+    EventWithCommentsDto getEventWithComments(@PathVariable Long eventId);
+
+    /**
+     * Endpoint of controller which get Event with comments list
+     * @param sort param which describes how to sort ascending,descending
+     * @return List of EventWithCommentsDto
+     */
+    @GetMapping("/comments")
+    List<EventWithCommentsDto> getEventWithCommentsList(@RequestParam(defaultValue = "asc") String sort);
 }

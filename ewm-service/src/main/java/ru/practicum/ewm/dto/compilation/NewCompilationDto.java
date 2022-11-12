@@ -1,7 +1,9 @@
 package ru.practicum.ewm.dto.compilation;
 
+
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -18,5 +20,6 @@ import java.util.List;
 public class NewCompilationDto {
     private List<Long> events;
     private Boolean pinned;
+    @NotNull
     private String title;
 }

@@ -2,6 +2,7 @@ package ru.practicum.ewm.service.event.publicsrv;
 
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
+import ru.practicum.ewm.dto.event.EventWithCommentsDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -41,4 +42,20 @@ public interface PublicEventService {
                                           Boolean paid, String rangeStart,
                                           String rangeEnd, Boolean onlyAvailable,
                                           String sort, Integer from, Integer size, HttpServletRequest request);
+
+    /**
+     * Method of service which get Event with comments
+     *
+     * @param eventId id of event
+     * @return EventWithCommentsDto
+     */
+    EventWithCommentsDto getEventWithComments(Long eventId);
+
+    /**
+     * Method of service which get Event with comments list
+     *
+     * @param sort param which describes how to sort ascending,descending
+     * @return List of EventWithCommentsDto
+     */
+    List<EventWithCommentsDto> getEventWithCommentsList(String sort);
 }

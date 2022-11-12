@@ -19,8 +19,12 @@ public final class DefaultValues {
     public static final String USER_NOT_FOUND = "User not found id:";
     public static final String COMPILATION_NOT_FOUND = "Compilation not found id:";
     public static final String PARTICIPANT_NOT_FOUND = "Participant request not found id:";
+    public static final String COMMENT_NOT_FOUND = "Comment not found id:";
+    public static final String REPORTED_COMMENT_NOT_FOUND = "Report comment not found id:";
     public static final String WRONG_DATE = "The event cannot be earlier than 2 hours from the current time";
     public static final String PENDING_ERROR = "Only pending events can be changed";
     public static final String USER_NOT_OWNER = "User not owner of event";
     public static final String PARTICIPANT_LIMIT = "Participant limit is reached";
+    public static final String DEFAULT_TEXT_EMPTY = "Text is empty or blank";
+    public static final String DEFAULT_REPORT_NAME_EMPTY = "Report name is empty or blank";
 }

@@ -5,6 +5,7 @@ import ru.practicum.ewm.dto.user.NewUserDto;
 import ru.practicum.ewm.dto.user.UserDto;
 import ru.practicum.ewm.model.user.User;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -36,7 +37,7 @@ public interface AdminUserController {
      * @return User
      */
     @PostMapping
-    User addUser(@RequestBody NewUserDto newUser);
+    User addUser(@Valid @RequestBody NewUserDto newUser);
 
     /**
      * Endpoint of controller which delete user

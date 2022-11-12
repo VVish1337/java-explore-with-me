@@ -1,6 +1,7 @@
-package ru.practicum.ewm.controller.request.publiccontroller;
+package ru.practicum.ewm.controller.request.privatecontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
 import ru.practicum.ewm.service.request.privatesrv.EventRequestService;
@@ -8,11 +9,12 @@ import ru.practicum.ewm.service.request.privatesrv.EventRequestService;
 import java.util.List;
 
 /**
- * Class describing event request controller for Public api.
+ * Class describing event request controller for Private api.
  *
  * @author Timur Kiyamov
- * @version 1.0
+ * @version 1.1
  */
+@Validated
 @RestController
 @RequestMapping("/users/{userId}")
 public class EventRequestControllerImpl implements EventRequestController {
@@ -92,7 +94,7 @@ public class EventRequestControllerImpl implements EventRequestController {
     @Override
     @PostMapping("/requests")
     public ParticipationRequestDto addRequestToEventFromUser(@PathVariable Long userId,
-                                                             @RequestParam Long eventId) {
+                                                             @RequestParam(required = false) Long eventId) {
         return service.addRequestToEventFromUser(userId, eventId);
     }
 
