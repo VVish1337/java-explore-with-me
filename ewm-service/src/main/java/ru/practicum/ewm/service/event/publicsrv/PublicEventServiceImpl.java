@@ -131,7 +131,7 @@ public class PublicEventServiceImpl implements PublicEventService {
         if (sort.equals("desc")) {
             sortType = Sort.by("createdOn").descending();
         }
-        List<Event> eventList = eventRepository.findAll();
+        List<Event> eventList = eventRepository.findAllByState(PublicationState.PUBLISHED);
         List<Long> ids = eventList.stream()
                 .map(Event::getId)
                 .collect(Collectors.toList());

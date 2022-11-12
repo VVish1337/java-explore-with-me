@@ -175,7 +175,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
      *
      * @param userId  id of user (owner of comment)
      * @param eventId id of event
-     * @param text    text which will be add as commment
+     * @param text    text which will be add as comment
      * @return CommentDto
      */
     @Override
@@ -185,6 +185,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         }
         User user = checkUserExists(userId);
         Event event = getEvent(eventId);
+        if (!event.getState().equals(PublicationState.PUBLISHED)) {
+            throw new ForbiddenException("Event must be published");
+        }
         return EventMapper.toCommentDto(commentRepository.save(EventMapper.toCommentModel(user, event, text)));
     }
 
@@ -203,11 +206,11 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             throw new NotFoundException(DEFAULT_TEXT_EMPTY);
         }
         Comment comment = getComment(comId);
-        User user = checkUserExists(userId);
+        checkUserExists(userId);
         if (!comment.getUser().getId().equals(userId)) {
             throw new ForbiddenException("User not owner of comment");
         }
-        Event event = getEvent(eventId);
+        getEvent(eventId);
         if (!comment.getEvent().getId().equals(eventId)) {
             throw new ForbiddenException("This comment not in this event");
         }
@@ -224,11 +227,11 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     @Override
     public void deleteCommentByUserOwner(Long userId, Long eventId, Long comId) {
         Comment comment = getComment(comId);
-        User user = checkUserExists(userId);
+        checkUserExists(userId);
         if (!comment.getUser().getId().equals(userId)) {
             throw new ForbiddenException("User not owner of comment");
         }
-        Event event = getEvent(eventId);
+        getEvent(eventId);
         if (!comment.getEvent().getId().equals(eventId)) {
             throw new ForbiddenException("This comment not in this event");
         }
@@ -254,7 +257,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         if (comment.getUser().getId().equals(userId)) {
             throw new ForbiddenException("User owner of comment");
         }
-        Event event = getEvent(eventId);
+        getEvent(eventId);
         if (!comment.getEvent().getId().equals(eventId)) {
             throw new ForbiddenException("This comment not in this event");
         }
